@@ -1,20 +1,21 @@
 const {ObjectID} = require('mongodb');
 
-const {Greeting} = require('./../../models/greeting');
+const {Client} = require('./../../models/client');
 
-const greetingId = new ObjectID();
+const clientId = new ObjectID();
 
-const greetings = [
+const clients = [
   {
-    _id: greetingId,
-    text: 'Hello World!'
+    _id: clientId,
+    messenger_user_id: '12345678987654321',
+    phone_number: '123-456-7890'
   }
 ]
 
-const populateGreetings = (done) => {
-  Greeting.remove({}).then(()=> {
-    return Greeting.insertMany(greetings);
+const populateClients = (done) => {
+  Client.remove({}).then(()=> {
+    return Client.insertMany(clients);
   }).then(() => done());
 };
 
-module.exports = {greetings, populateGreetings};
+module.exports = {clients, populateClients};

@@ -1,11 +1,12 @@
 require('./config/config');
 
+const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
 
 const {mongoose} = require('./db/mongoose');
 
-let {Greeting} = require('./models/greeting');
+let {Client} = require('./models/client');
 
 let app = express();
 
@@ -13,47 +14,98 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 
-// app.use((req, res, next) => {
-//   let now = new Date().toString();
-//   console.log(`${now}: ${req.method} ${req.url}`);
-//   next();
-// })
+if (process.env.NODE_ENV !== 'test') {
+  app.use((req, res, next) => {
+    let now = new Date().toString();
+    console.log(`${now}: ${req.method} ${req.url}`);
+    next();
+  })
+};
 
-app.post('/learngreeting', (req, res, next) => {
-  if (!req.body.text) return res.status(400).send("Bad request");
-  let greeting = new Greeting({text : req.body.text})
-  greeting.save().then(() => {
-    res.status(200).send("I have learned to say greeting.");
-  }).catch((err) => next(err));
-})
+app.post('/addclient',(req, res, next) => {
+  if (!req.body['messenger user id']) return res.status(400).send('Bad request');
 
-app.get('/saygreeting', (req, res, next) => {
-  Greeting.findOne().then((greeting) => {
-    if (!greeting) {return res.status(404).send("I have not learned anything!")};
+  let client = new Client({
+      messenger_user_id: req.body['messenger user id'],
+      phone_number: req.body['phone number']
+  });
+
+  client.save()
+  .then(()=> {
     res.status(200).send({
-      text: greeting.text
+      "messages": [
+         {"text": "Cám ơn bạn!"}
+      ]
     })
-  }).catch((err) => next(err));
+  })
+  .catch((err) => next(err));
 });
 
-/// Test for server error catch
-// app.get('/error', (req, res, next) => {
-//   try {
-//     throw new Error("something bad happened.");
-//   }
-//   catch (err) {
-//     next(err);
-//   }
-// })
+app.post('/findclient', (req, res, next) => {
+  if (!req.body['messenger user id']) return res.status(400).send('Bad request');
+  console.log(req.body);
+  Client.findOne(
+    {messenger_user_id: req.body['messenger user id']}
+  )
+  .then((client) => {
+
+    if (!client) {
+      res.status(200).send({
+        "redirect_to_blocks": ["Get Customer Information"]
+      })
+    }
+    else {
+      res.status(200).send({
+        "messages": [
+          {
+            "attachment": {
+              "type": "template",
+              "payload": {
+                "template_type": "button",
+                "text": `Số điện thoại của bạn là ${client.phone_number}, Bạn có muốn thay đổi số điện thoại của bạn không?`,
+                "buttons": [
+                  {
+                    "type": "show_block",
+                    "block_name": "Get Customer Information",
+                    "title": "Thay đổi"
+                  },
+                  {
+                    "type": "show_block",
+                    "block_name": "Intro",
+                    "title": "Không"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      })
+    }
+  })
+  .catch((err) => next(err));
+});
+
+app.post('/updatephone', (req, res, next) => {
+  if (!req.body['messenger user id']) return res.status(400).send('Bad request');
+
+  Client.findOneAndUpdate(
+    {messenger_user_id: req.body['messenger user id']},
+    {$set:{phone_number: req.body['phone number']}},
+    {new: true} //this is for findOneAndUpdate to return the updated object
+  )
+  .then((client) => {
+    res.status(200).send({
+      "messages": [
+        {"text": `Số điện thoại mới của bạn là ${client.phone_number}`}
+      ]
+    })
+  })
+  .catch((err) => next(err));
+});
 
 /* catch 404 */
 app.use((req, res, next) => {
     res.status(404).send("Path not found");
-    //// Render error template if neccesary
-    // res.render('404.hbs', {
-    //   title: '404: Page Not Found',
-    //   errorMessage: 'Page not found'
-    // });
 });
 
 /* catch 5xx error */
@@ -66,12 +118,6 @@ app.use(function (err, req, res, next) {
     //     }
     // });
     res.status(500).send('Server Error');
-    //// Render error template if neccesary
-    // res.header("Content-Type", "text/html");
-    //   res.render('5xx.hbs', {
-    //   title:'500: Internal Server Error',
-    //   errorMessage: 'Internal Server Error - Please contact the server administrator and inform them of the time the error occurred, and anything you might have done that may have caused the error. '
-    // });
 });
 
 app.listen(process.env.PORT, () => {

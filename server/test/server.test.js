@@ -2,14 +2,14 @@ const expect = require('expect');
 const request = require('supertest');
 
 const {app} = require('../server');
-const {Greeting} = require('../models/greeting');
-const {greetings, populateGreetings} = require('./seed/seed');
+const {Client} = require('../models/client');
+const {clients, populateClients} = require('./seed/seed');
 
-beforeEach(populateGreetings);
+beforeEach(populateClients);
 
 describe('GET /404error', () => {
-  let text = "Path not found";
   it('should receive 404 error', (done) => {
+    let text = "Path not found";
     request(app)
       .get('/404error')
       .expect(404)
@@ -20,38 +20,67 @@ describe('GET /404error', () => {
   });
 });
 
-describe('POST /learngreeting', () => {
-  let greetingText = "Hola";
-  let text = "I have learned to say greeting.";
-  it('should create a new documnet in database', (done) => {
+describe('POST /addclient', () => {
+  it('should create a new client in database', (done) => {
+    let testClient =
+        {
+          "messenger user id": "1234566789",
+          "phone number": "090-123-4567"
+        };
+    let response_text = "Cám ơn bạn!";
     request(app)
-      .post('/learngreeting')
-      .send({text: greetingText})
+      .post('/addclient')
+      .send(testClient)
       .expect(200)
       .expect((res) => {
-        expect(res.text).toBe(text);
+        expect(res.body.messages[0].text).toBe(response_text);
       })
       .end((err)=> {
         if (err) done (err);
 
-        Greeting.findOne({text: greetingText}).then((greeting) => {
-          expect(greeting).toExist();
-          expect(greeting.text).toBe(greetingText);
+        Client.findOne({messenger_user_id: testClient["messenger user id"]}).then((client) => {
+          expect(client).toExist();
+          expect(client.phone).toBe(testClient.phone);
           done();
         }).catch((err) => done(err));
       });
   })
 });
 
-describe('GET /saygreeting', () => {
-  let greetingText = "Hello World!";
-  it('should return the only greeting in database', (done) => {
+describe('POST /findclient', () => {
+  it('should find a client with specific messenger id', (done) => {
+    let testClient =
+      {
+        "messenger user id": "12345678987654321",
+        "phone number": "123-456-7890"
+      };
+    let response_text = `Số điện thoại của bạn là ${testClient["phone number"]}`
     request(app)
-      .get('/saygreeting')
+      .post('/findclient')
+      .send({"messenger user id": testClient["messenger user id"]})
       .expect(200)
       .expect((res) => {
-        expect(res.body.text).toBe(greetingText);
+        expect(res.body.messages[0].text).toBe(response_text);
       })
       .end(done);
   })
-});
+})
+
+describe('POST /updatephone', () =>{
+  it('should update a client with new phone number', (done) => {
+    let testClient =
+      {
+        "messenger user id": "12345678987654321",
+        "phone number": "012-345-6789"
+      };
+    let response_text = `Số điện thoại mới của bạn là ${testClient["phone number"]}`
+    request(app)
+      .post('/updatephone')
+      .send(testClient)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.messages[0].text).toBe(response_text);
+      })
+      .end(done);
+  })
+})
