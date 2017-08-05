@@ -43,7 +43,6 @@ app.post('/addclient',(req, res, next) => {
 
 app.post('/findclient', (req, res, next) => {
   if (!req.body['messenger user id']) return res.status(400).send('Bad request');
-  console.log(req.body);
   Client.findOne(
     {messenger_user_id: req.body['messenger user id']}
   )

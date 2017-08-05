@@ -54,13 +54,13 @@ describe('POST /findclient', () => {
         "messenger user id": "12345678987654321",
         "phone number": "123-456-7890"
       };
-    let response_text = `Số điện thoại của bạn là ${testClient["phone number"]}`
+    let response_text = `Số điện thoại của bạn là ${testClient["phone number"]}, Bạn có muốn thay đổi số điện thoại của bạn không?`
     request(app)
       .post('/findclient')
       .send({"messenger user id": testClient["messenger user id"]})
       .expect(200)
       .expect((res) => {
-        expect(res.body.messages[0].text).toBe(response_text);
+        expect(res.body.messages[0].attachment.payload.text).toBe(response_text);
       })
       .end(done);
   })
