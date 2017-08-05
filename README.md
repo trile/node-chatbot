@@ -5,7 +5,6 @@
 This is the source code for OVC chatbot API.
 Please [read the PRD](http://bit.ly/2voU8bQ)
 Respo: [bitbucket](https://bitbucket.org/account/user/solutions-union/projects/OV)
-Heroku app: https://ovc-chatbot-sun.herokuapp.com/
 
 ## Requirement
 Correctly set up Mongo database server.
@@ -36,3 +35,4 @@ yarn test-watch
 ```
 
 ## Deployment on Heroku
+App Url: https://ovc-chatbot-sun.herokuapp.com/
