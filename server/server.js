@@ -66,7 +66,7 @@ app.post('/findclient', (req, res, next) => {
                 "buttons": [
                   {
                     "type": "show_block",
-                    "block_name": "Get Customer Information",
+                    "block_name": "Update Customer Information",
                     "title": "Thay đổi"
                   },
                   {
@@ -96,7 +96,7 @@ app.post('/updatephone', (req, res, next) => {
   .then((client) => {
     res.status(200).send({
       "messages": [
-        {"text": `Số điện thoại mới của bạn là ${client.phone_number}`}
+        {"text": `Cảm ơn bạn, chúng tôi đã cập nhật số điện thoại mới của bạn là ${client.phone_number}`}
       ]
     })
   })

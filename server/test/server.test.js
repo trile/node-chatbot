@@ -73,7 +73,7 @@ describe('POST /updatephone', () =>{
         "messenger user id": "12345678987654321",
         "phone number": "012-345-6789"
       };
-    let response_text = `Số điện thoại mới của bạn là ${testClient["phone number"]}`
+    let response_text = `Cảm ơn bạn, chúng tôi đã cập nhật số điện thoại mới của bạn là ${testClient["phone number"]}`
     request(app)
       .post('/updatephone')
       .send(testClient)
