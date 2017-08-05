@@ -12,7 +12,9 @@ Correctly set up Mongo database server.
 All app configurations including database url can be found at `server/config/config.json`
 
 ## API endpoints
-
+`/addclient`: create a new client.
+`/findclient`: check if client already exist.
+`/updatephone`: update phone number for a client.
 
 ## Commands
 To start server:
