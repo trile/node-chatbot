@@ -36,3 +36,7 @@ yarn test-watch
 
 ## Deployment on Heroku
 App Url: https://ovc-chatbot-sun.herokuapp.com/
+Need to set appropriate environment variables:
+`PORT`
+`MONGO_URI`
+`API_TOKEN`
