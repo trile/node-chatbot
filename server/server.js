@@ -5,6 +5,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const {mongoose} = require('./db/mongoose');
+const {checkAPIKey} = require('./middlewares/authenticate');
 
 let {Client} = require('./models/client');
 
@@ -22,7 +23,13 @@ if (process.env.NODE_ENV !== 'test') {
   })
 };
 
-app.post('/addclient',(req, res, next) => {
+app.get('/test', checkAPIKey, (req, res, next) => {
+  res.status(200).send("Correct API key");
+})
+
+
+
+app.post('/addclient', checkAPIKey, (req, res, next) => {
   if (!req.body['messenger user id']) return res.status(400).send('Bad request');
 
   let client = new Client({
@@ -41,7 +48,8 @@ app.post('/addclient',(req, res, next) => {
   .catch((err) => next(err));
 });
 
-app.post('/findclient', (req, res, next) => {
+app.post('/findclient', checkAPIKey, (req, res, next) => {
+
   if (!req.body['messenger user id']) return res.status(400).send('Bad request');
   Client.findOne(
     {messenger_user_id: req.body['messenger user id']}
@@ -84,7 +92,7 @@ app.post('/findclient', (req, res, next) => {
   .catch((err) => next(err));
 });
 
-app.post('/updatephone', (req, res, next) => {
+app.post('/updatephone', checkAPIKey, (req, res, next) => {
   if (!req.body['messenger user id']) return res.status(400).send('Bad request');
 
   Client.findOneAndUpdate(

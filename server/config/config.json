@@ -1,10 +1,12 @@
 {
     "test": {
         "PORT": 3000,
-        "MONGODB_URI": "mongodb://localhost:27017/HelloWordAppTest"
+        "MONGODB_URI": "mongodb://localhost:27017/ovc-chatbot-test",
+        "API_TOKEN": "2bf6af60edba7e56860d059d322f7184fd3470b6"
     },
     "development": {
         "PORT": 3000,
-        "MONGODB_URI": "mongodb://localhost:27017/HelloWorldApp"
+        "MONGODB_URI": "mongodb://localhost:27017/ovc-chatbot",
+        "API_TOKEN": "c9fb81d07965a58bbc5b1056113fca4788baa5ab"
     }
 }
