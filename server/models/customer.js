@@ -7,6 +7,9 @@ let CustomerSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  locale: {
+    type: String
+  },
   phone_number: {
     type: String,
     trim: true

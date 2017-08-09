@@ -5,8 +5,11 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const {mongoose} = require('./db/mongoose');
+
+const {Messages} = require('./messages');
+
 const {checkAPIKey} = require('./middlewares/authenticate');
-const {checkFBUserExist} = require('./middlewares/check-fbuser');
+const {checkBody} = require('./middlewares/check-fbuser');
 
 let {Customer} = require('./models/customer');
 
@@ -24,26 +27,63 @@ if (process.env.NODE_ENV !== 'test') {
   })
 };
 
-app.get('/test', checkAPIKey, (req, res, next) => {
-  res.status(200).send("Correct API key");
-})
-
-
-app.post('/addcustomer' , (req, res, next) => {
-
-})
-
-app.post('/findcustomer', [checkAPIKey, checkFBUserExist], (req, res, next) => {
+app.post('/setupcustomer', [checkAPIKey, checkBody], (req, res, next) => {
+  Customer.findOne(
+    {messenger_user_id: req.body['messenger user id']}
+  )
+  .then((customer) => {
+    if (!customer) {
+      let newCustomer = new Customer({
+          messenger_user_id: req.body['messenger user id'],
+      });
+      newCustomer.save()
+      .then(() => {
+        res.status(200).send({
+          "messages": [
+             {
+               "text": Message.dual_lang.greeting,
+             }
+          ],
+          "redirect_to_blocks": ["Initiate Conversation"]
+        })
+      }).catch((err) => next(err));
+    }
+    else {
+      if(!customer.locale) {
+        res.status(200).send({
+          "messages": [
+             {
+               "text": Message.dual_lang.greeting,
+             }
+          ],
+          "redirect_to_blocks": ["Initiate Conversation"]
+        })
+      }
+      else {
+        res.status(200).send({
+          "set_attributes": {
+              "Customer Language": customer.locale,
+          },
+          "messages": [
+            {
+              "text": Messages[customer.locale].greeting
+            }
+          ],
+          "redirect_to_blocks": ["Initiate Conversation"]
+        })
+      }
+    }
+  })
+  .catch((err) => next(err));
 });
 
-app.post('/addphone', [checkAPIKey, checkFBUserExist], (req, res, next) => {
+app.post('/addphone', [checkAPIKey, checkBody], (req, res, next) => {
 
-  let customer = new Customer({
-      messenger_user_id: req.body['messenger user id'],
-      phone_number: req.body['phone number']
-  });
-
-  customer.save()
+  Customer.findOneAndUpdate(
+    {messenger_user_id: req.body['messenger user id']},
+    {$set:{phone_number: req.body['phone number']}},
+    {new: true} //this is for findOneAndUpdate to return the updated object
+  )
   .then(()=> {
     res.status(200).send({
       "messages": [
@@ -54,7 +94,7 @@ app.post('/addphone', [checkAPIKey, checkFBUserExist], (req, res, next) => {
   .catch((err) => next(err));
 });
 
-app.post('/checkphone', [checkAPIKey, checkFBUserExist], (req, res, next) => {
+app.post('/checkphone', [checkAPIKey, checkBody], (req, res, next) => {
   Customer.findOne(
     {messenger_user_id: req.body['messenger user id']}
   )
@@ -67,7 +107,7 @@ app.post('/checkphone', [checkAPIKey, checkFBUserExist], (req, res, next) => {
 
     if (!customer.phone_number) {
       res.status(200).send({
-        "redirect_to_blocks": ["Get Customer Information"]
+        "redirect_to_blocks": ["Add Customer Phone"]
       });
     }
     else {
@@ -82,12 +122,12 @@ app.post('/checkphone', [checkAPIKey, checkFBUserExist], (req, res, next) => {
                 "buttons": [
                   {
                     "type": "show_block",
-                    "block_name": "Update Customer Information",
+                    "block_name": "Update Customer Phone",
                     "title": "Thay đổi"
                   },
                   {
                     "type": "show_block",
-                    "block_name": "Finish Get Customer Phone Number",
+                    "block_name": "Finish Customer Phone",
                     "title": "Không"
                   }
                 ]
@@ -101,7 +141,7 @@ app.post('/checkphone', [checkAPIKey, checkFBUserExist], (req, res, next) => {
   .catch((err) => next(err));
 })
 
-app.post('/updatephone', [checkAPIKey, checkFBUserExist], (req, res, next) => {
+app.post('/updatephone', [checkAPIKey, checkBody], (req, res, next) => {
 
   Customer.findOneAndUpdate(
     {messenger_user_id: req.body['messenger user id']},

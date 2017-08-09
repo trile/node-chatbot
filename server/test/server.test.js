@@ -24,7 +24,7 @@ describe('POST /addphone', () => {
   let rejectText = 'Forbidden.';
   let testCustomer =
     {
-      'messenger user id': '1234566789',
+      'messenger user id': '98765432123456789',
       'phone number': '090-123-4567'
     };
   let response_text = 'Cám ơn bạn!';
@@ -40,7 +40,7 @@ describe('POST /addphone', () => {
       .end(done);
   })
 
-  it('should create a new customer in database', (done) => {
+  it('should add a new phone number for a customer', (done) => {
 
     request(app)
       .post(`/addphone?token=${process.env.API_TOKEN}`)
