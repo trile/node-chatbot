@@ -1,18 +1,18 @@
 let mongoose = require('mongoose');
 
-let ClientSchema = new mongoose.Schema({
+let CustomerSchema = new mongoose.Schema({
   messenger_user_id: {
     type: String,
+    unique: true,
     required: true,
     trim: true
   },
   phone_number: {
     type: String,
-    required: true,
     trim: true
   }
 });
 
-let Client = mongoose.model('Client', ClientSchema);
+let Customer = mongoose.model('Cusomter', CustomerSchema);
 
-module.exports = {Client};
+module.exports = {Customer};

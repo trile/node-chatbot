@@ -41,7 +41,7 @@ function sha1(password, salt) {
 function saltHashPassword(userpassword) {
     var salt = genRandomString(16); /** Gives us salt of length 16 */
     var passwordData = sha1(userpassword, salt);
-    console.log('String to be hashed = '+userpassword);
+    console.log('String to be hashed = '+ userpassword);
     console.log('hashed string = '+ passwordData.passwordHash);
     console.log('nSalt = '+ passwordData.salt);
 }

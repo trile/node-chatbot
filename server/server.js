@@ -6,8 +6,9 @@ const bodyParser = require('body-parser');
 
 const {mongoose} = require('./db/mongoose');
 const {checkAPIKey} = require('./middlewares/authenticate');
+const {checkFBUserExist} = require('./middlewares/check-fbuser');
 
-let {Client} = require('./models/client');
+let {Customer} = require('./models/customer');
 
 let app = express();
 
@@ -28,16 +29,21 @@ app.get('/test', checkAPIKey, (req, res, next) => {
 })
 
 
+app.post('/addcustomer' , (req, res, next) => {
 
-app.post('/addclient', checkAPIKey, (req, res, next) => {
-  if (!req.body['messenger user id']) return res.status(400).send('Bad request');
+})
 
-  let client = new Client({
+app.post('/findcustomer', [checkAPIKey, checkFBUserExist], (req, res, next) => {
+});
+
+app.post('/addphone', [checkAPIKey, checkFBUserExist], (req, res, next) => {
+
+  let customer = new Customer({
       messenger_user_id: req.body['messenger user id'],
       phone_number: req.body['phone number']
   });
 
-  client.save()
+  customer.save()
   .then(()=> {
     res.status(200).send({
       "messages": [
@@ -48,18 +54,21 @@ app.post('/addclient', checkAPIKey, (req, res, next) => {
   .catch((err) => next(err));
 });
 
-app.post('/findclient', checkAPIKey, (req, res, next) => {
-
-  if (!req.body['messenger user id']) return res.status(400).send('Bad request');
-  Client.findOne(
+app.post('/checkphone', [checkAPIKey, checkFBUserExist], (req, res, next) => {
+  Customer.findOne(
     {messenger_user_id: req.body['messenger user id']}
   )
-  .then((client) => {
+  .then((customer) => {
+    if (!customer) {
+      res.status(404).send('Cannot find customer on the system.' +
+                            'Make sure there is one created at Welcome Block');
+      return;
+    }
 
-    if (!client) {
+    if (!customer.phone_number) {
       res.status(200).send({
         "redirect_to_blocks": ["Get Customer Information"]
-      })
+      });
     }
     else {
       res.status(200).send({
@@ -69,7 +78,7 @@ app.post('/findclient', checkAPIKey, (req, res, next) => {
               "type": "template",
               "payload": {
                 "template_type": "button",
-                "text": `Số điện thoại của bạn là ${client.phone_number}, Bạn có muốn thay đổi số điện thoại của bạn không?`,
+                "text": `Số điện thoại của bạn là ${customer.phone_number}, Bạn có muốn thay đổi số điện thoại của bạn không?`,
                 "buttons": [
                   {
                     "type": "show_block",
@@ -78,7 +87,7 @@ app.post('/findclient', checkAPIKey, (req, res, next) => {
                   },
                   {
                     "type": "show_block",
-                    "block_name": "Intro",
+                    "block_name": "Finish Get Customer Phone Number",
                     "title": "Không"
                   }
                 ]
@@ -86,24 +95,23 @@ app.post('/findclient', checkAPIKey, (req, res, next) => {
             }
           }
         ]
-      })
+      });
     }
   })
   .catch((err) => next(err));
-});
+})
 
-app.post('/updatephone', checkAPIKey, (req, res, next) => {
-  if (!req.body['messenger user id']) return res.status(400).send('Bad request');
+app.post('/updatephone', [checkAPIKey, checkFBUserExist], (req, res, next) => {
 
-  Client.findOneAndUpdate(
+  Customer.findOneAndUpdate(
     {messenger_user_id: req.body['messenger user id']},
     {$set:{phone_number: req.body['phone number']}},
     {new: true} //this is for findOneAndUpdate to return the updated object
   )
-  .then((client) => {
+  .then((customer) => {
     res.status(200).send({
       "messages": [
-        {"text": `Cảm ơn bạn, chúng tôi đã cập nhật số điện thoại mới của bạn là ${client.phone_number}`}
+        {"text": `Cảm ơn bạn, chúng tôi đã cập nhật số điện thoại mới của bạn là ${customer.phone_number}`}
       ]
     })
   })
