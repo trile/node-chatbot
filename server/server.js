@@ -118,17 +118,17 @@ app.post('/checkphone', [checkAPIKey, checkBody], (req, res, next) => {
               "type": "template",
               "payload": {
                 "template_type": "button",
-                "text": `Số điện thoại của bạn là ${customer.phone_number}, Bạn có muốn thay đổi số điện thoại của bạn không?`,
+                "text": Messages[customer.locale].checkphone(customer.phone_number),
                 "buttons": [
                   {
                     "type": "show_block",
                     "block_name": "Update Customer Phone",
-                    "title": "Thay đổi"
+                    "title": Messages[customer.locale].checkphone_button_change
                   },
                   {
                     "type": "show_block",
                     "block_name": "Finish Customer Phone",
-                    "title": "Không"
+                    "title": Messages[customer.locale].checkphone_button_no
                   }
                 ]
               }
@@ -151,7 +151,7 @@ app.post('/updatephone', [checkAPIKey, checkBody], (req, res, next) => {
   .then((customer) => {
     res.status(200).send({
       "messages": [
-        {"text": `Cảm ơn bạn, chúng tôi đã cập nhật số điện thoại mới của bạn là ${customer.phone_number}`}
+        {"text": Messages[customer.locale].updatephone(customer.phone_number)}
       ]
     })
   })
