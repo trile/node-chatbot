@@ -41,7 +41,7 @@ app.post('/setupcustomer', [checkAPIKey, checkBody], (req, res, next) => {
         res.status(200).send({
           "messages": [
              {
-               "text": Message.dual_lang.greeting,
+               "text": Messages.dual_lang.greeting,
              }
           ],
           "redirect_to_blocks": ["Initiate Conversation"]
@@ -53,7 +53,7 @@ app.post('/setupcustomer', [checkAPIKey, checkBody], (req, res, next) => {
         res.status(200).send({
           "messages": [
              {
-               "text": Message.dual_lang.greeting,
+               "text": Messages.dual_lang.greeting,
              }
           ],
           "redirect_to_blocks": ["Initiate Conversation"]
@@ -61,35 +61,18 @@ app.post('/setupcustomer', [checkAPIKey, checkBody], (req, res, next) => {
       }
       else {
         res.status(200).send({
-          "set_attributes": {
-              "Customer Language": customer.locale,
-          },
           "messages": [
             {
               "text": Messages[customer.locale].greeting
             }
           ],
+          "set_attributes": {
+              "Customer Language": customer.locale,
+          },
           "redirect_to_blocks": ["Initiate Conversation"]
         })
       }
     }
-  })
-  .catch((err) => next(err));
-});
-
-app.post('/addphone', [checkAPIKey, checkBody], (req, res, next) => {
-
-  Customer.findOneAndUpdate(
-    {messenger_user_id: req.body['messenger user id']},
-    {$set:{phone_number: req.body['phone number']}},
-    {new: true} //this is for findOneAndUpdate to return the updated object
-  )
-  .then(()=> {
-    res.status(200).send({
-      "messages": [
-         {"text": "Cám ơn bạn!"}
-      ]
-    })
   })
   .catch((err) => next(err));
 });
@@ -141,6 +124,29 @@ app.post('/checkphone', [checkAPIKey, checkBody], (req, res, next) => {
   .catch((err) => next(err));
 })
 
+app.post('/addphone', [checkAPIKey, checkBody], (req, res, next) => {
+
+  Customer.findOneAndUpdate(
+    {messenger_user_id: req.body['messenger user id']},
+    {$set:{phone_number: req.body['phone number']}},
+    {new: true} //this is for findOneAndUpdate to return the updated object
+  )
+  .then((customer)=> {
+    if (!customer) {
+      res.status(404).send('Cannot find customer on the system.' +
+                            'Make sure there is one created at Welcome Block');
+      return;
+    }
+
+    res.status(200).send({
+      "messages": [
+         {"text": Messages[customer.locale].addphone}
+      ]
+    })
+  })
+  .catch((err) => next(err));
+});
+
 app.post('/updatephone', [checkAPIKey, checkBody], (req, res, next) => {
 
   Customer.findOneAndUpdate(
@@ -149,6 +155,12 @@ app.post('/updatephone', [checkAPIKey, checkBody], (req, res, next) => {
     {new: true} //this is for findOneAndUpdate to return the updated object
   )
   .then((customer) => {
+    if (!customer) {
+      res.status(404).send('Cannot find customer on the system.' +
+                            'Make sure there is one created at Welcome Block');
+      return;
+    }
+
     res.status(200).send({
       "messages": [
         {"text": Messages[customer.locale].updatephone(customer.phone_number)}
