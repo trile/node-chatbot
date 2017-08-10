@@ -41,7 +41,7 @@ app.post('/setupcustomer', [checkAPIKey, checkBody], (req, res, next) => {
         res.status(200).send({
           "messages": [
              {
-               "text": Messages.dual_lang.greeting,
+               "text": Messages.dual_lang.setupcustomer_greeting,
              }
           ],
           "redirect_to_blocks": ["Initiate Conversation"]
@@ -53,7 +53,7 @@ app.post('/setupcustomer', [checkAPIKey, checkBody], (req, res, next) => {
         res.status(200).send({
           "messages": [
              {
-               "text": Messages.dual_lang.greeting,
+               "text": Messages.dual_lang.setupcustomer_greeting,
              }
           ],
           "redirect_to_blocks": ["Initiate Conversation"]
@@ -63,11 +63,11 @@ app.post('/setupcustomer', [checkAPIKey, checkBody], (req, res, next) => {
         res.status(200).send({
           "messages": [
             {
-              "text": Messages[customer.locale].greeting
+              "text": Messages[customer.locale].setupcustomer_greeting
             }
           ],
           "set_attributes": {
-              "Customer Language": customer.locale,
+              "language": customer.locale,
           },
           "redirect_to_blocks": ["Initiate Conversation"]
         })
@@ -75,6 +75,34 @@ app.post('/setupcustomer', [checkAPIKey, checkBody], (req, res, next) => {
     }
   })
   .catch((err) => next(err));
+});
+
+app.post('/setlocale', [checkAPIKey, checkBody], (req, res, next) => {
+  if (!req.body['language']) {
+    res.status(400).send('Bad request: No language.');
+    return;
+  }
+
+  Customer.findOneAndUpdate(
+    {messenger_user_id: req.body['messenger user id']},
+    {$set: {locale: req.body['language']}},
+    {new: true}
+  )
+  .then((customer) => {
+    res.status(200).send({
+      "messages": [
+        {
+          "text": Messages[customer.locale].setlocate
+        }
+      ],
+      "set_attributes": {
+          "language": customer.locale,
+      },
+      "redirect_to_blocks": ["Finish Customer Locale"]
+    });
+  })
+  .catch((err) => next(err));
+
 });
 
 app.post('/checkphone', [checkAPIKey, checkBody], (req, res, next) => {
@@ -126,6 +154,11 @@ app.post('/checkphone', [checkAPIKey, checkBody], (req, res, next) => {
 
 app.post('/addphone', [checkAPIKey, checkBody], (req, res, next) => {
 
+  if (!req.body['phone number']) {
+    res.status(400).send('Bad request: No phone number.');
+    return;
+  }
+
   Customer.findOneAndUpdate(
     {messenger_user_id: req.body['messenger user id']},
     {$set:{phone_number: req.body['phone number']}},
@@ -148,6 +181,11 @@ app.post('/addphone', [checkAPIKey, checkBody], (req, res, next) => {
 });
 
 app.post('/updatephone', [checkAPIKey, checkBody], (req, res, next) => {
+
+  if (!req.body['phone number']) {
+    res.status(400).send('Bad request: No phone number.');
+    return;
+  }
 
   Customer.findOneAndUpdate(
     {messenger_user_id: req.body['messenger user id']},
