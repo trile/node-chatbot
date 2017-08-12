@@ -393,7 +393,7 @@ describe('POST /updatephone', () =>{
 
   it ('should return 400 if there is no phone number in request', (done) => {
     request(app)
-      .post(`/addphone?token=${process.env.API_TOKEN}`)
+      .post(`/updatephone?token=${process.env.API_TOKEN}`)
       .send({'messenger user id':'98765432123456789'})
       .expect(400)
       .expect((res) => {
