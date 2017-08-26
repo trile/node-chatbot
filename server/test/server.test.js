@@ -22,7 +22,7 @@ describe('GET /404error', () => {
 
 /* ================ */
 
-describe('POST /setupcustomer', () => {
+describe('POST /api/customer/setup', () => {
   let reject403 = 'Forbidden.';
   let reject400 = 'Bad request: No messenger id.';
 
@@ -46,7 +46,7 @@ describe('POST /setupcustomer', () => {
 
   it('should reject permission of there no api token', (done) => {
     request(app)
-      .post(`/setupcustomer`)
+      .post(`/api/customer/setup`)
       .send({})
       .expect(403)
       .expect((res) => {
@@ -57,7 +57,7 @@ describe('POST /setupcustomer', () => {
 
   it('should return 400 if there is no messenger id', (done) => {
     request(app)
-      .post(`/setupcustomer?token=${process.env.API_TOKEN}`)
+      .post(`/api/customer/setup?token=${process.env.API_TOKEN}`)
       .send({})
       .expect(400)
       .expect((res) => {
@@ -68,7 +68,7 @@ describe('POST /setupcustomer', () => {
 
   it('should create a new customer he/she is not yet in the system', (done) => {
     request(app)
-      .post(`/setupcustomer?token=${process.env.API_TOKEN}`)
+      .post(`/api/customer/setup?token=${process.env.API_TOKEN}`)
       .send(bodyNew)
       .expect(200)
       .expect((res) => {
@@ -86,7 +86,7 @@ describe('POST /setupcustomer', () => {
 
   it('should use dual language greeting if customer locale is not set', (done) => {
     request(app)
-      .post(`/setupcustomer?token=${process.env.API_TOKEN}`)
+      .post(`/api/customer/setup?token=${process.env.API_TOKEN}`)
       .send(bodyNoLocale)
       .expect(200)
       .expect((res) => {
@@ -97,7 +97,7 @@ describe('POST /setupcustomer', () => {
 
   it('should use proper language if customer locale is set', (done) => {
     request(app)
-      .post(`/setupcustomer?token=${process.env.API_TOKEN}`)
+      .post(`/api/customer/setup?token=${process.env.API_TOKEN}`)
       .send(bodyWithLocale)
       .expect(200)
       .expect((res) => {
@@ -108,7 +108,7 @@ describe('POST /setupcustomer', () => {
 
   it('should set Chatfuel user property if customer locate is set', (done) => {
     request(app)
-      .post(`/setupcustomer?token=${process.env.API_TOKEN}`)
+      .post(`/api/customer/setup?token=${process.env.API_TOKEN}`)
       .send(bodyWithLocale)
       .expect(200)
       .expect((res) => {
@@ -119,7 +119,7 @@ describe('POST /setupcustomer', () => {
 
   it('should redirect to proper block of customer locate is set', (done) => {
     request(app)
-      .post(`/setupcustomer?token=${process.env.API_TOKEN}`)
+      .post(`/api/customer/setup?token=${process.env.API_TOKEN}`)
       .send(bodyWithLocale)
       .expect(200)
       .expect((res) => {
@@ -130,9 +130,10 @@ describe('POST /setupcustomer', () => {
 
 })
 
+
 /* ================ */
 
-describe('POST /setlocale', () => {
+describe('POST /api/locale/set', () => {
   let reject403 = 'Forbidden.';
   let reject400_1 = 'Bad request: No messenger id.';
   let reject400_2 = 'Bad request: No language.';
@@ -146,7 +147,7 @@ describe('POST /setlocale', () => {
 
   it ('should reject permission if there is no api token', (done) => {
     request(app)
-      .post(`/setlocale`)
+      .post(`/api/locale/set`)
       .send(body)
       .expect(403)
       .expect((res) => {
@@ -157,7 +158,7 @@ describe('POST /setlocale', () => {
 
   it('should return 400 if there is no messenger id', (done) => {
     request(app)
-      .post(`/setlocale?token=${process.env.API_TOKEN}`)
+      .post(`/api/locale/set?token=${process.env.API_TOKEN}`)
       .send({})
       .expect(400)
       .expect((res) => {
@@ -168,7 +169,7 @@ describe('POST /setlocale', () => {
 
   it('should return 400 if there is no language in the request', (done) => {
     request(app)
-      .post(`/setlocale?token=${process.env.API_TOKEN}`)
+      .post(`/api/locale/set?token=${process.env.API_TOKEN}`)
       .send({'messenger user id': '12345678987654321'})
       .expect(400)
       .expect((res) => {
@@ -179,7 +180,7 @@ describe('POST /setlocale', () => {
 
   it('should set proper language for given customer', (done) => {
     request(app)
-      .post(`/setlocale?token=${process.env.API_TOKEN}`)
+      .post(`/api/locale/set?token=${process.env.API_TOKEN}`)
       .send(body)
       .expect(200)
       .expect((res) => {
@@ -199,7 +200,7 @@ describe('POST /setlocale', () => {
 
   it('should set Chatfuel user property', (done) => {
     request(app)
-      .post(`/setlocale?token=${process.env.API_TOKEN}`)
+      .post(`/api/locale/set?token=${process.env.API_TOKEN}`)
       .send(body)
       .expect(200)
       .expect((res) => {
@@ -219,7 +220,7 @@ describe('POST /setlocale', () => {
 
   it('should redirect to proper block', (done) => {
     request(app)
-      .post(`/setlocale?token=${process.env.API_TOKEN}`)
+      .post(`/api/locale/set?token=${process.env.API_TOKEN}`)
       .send(body)
       .expect(200)
       .expect((res) => {
@@ -241,7 +242,7 @@ describe('POST /setlocale', () => {
 
 /* ================ */
 
-describe('POST /checkphone', () => {
+describe('POST /api/phone/check', () => {
   let reject403 = 'Forbidden.';
   let reject400 = 'Bad request: No messenger id.';
 
@@ -254,7 +255,7 @@ describe('POST /checkphone', () => {
 
   it ('should reject permission if there is no api token', (done) => {
     request(app)
-      .post(`/checkphone`)
+      .post(`/api/phone/check`)
       .send(body)
       .expect(403)
       .expect((res) => {
@@ -265,7 +266,7 @@ describe('POST /checkphone', () => {
 
   it('should return 400 if there is no messenger id', (done) => {
     request(app)
-      .post(`/checkphone?token=${process.env.API_TOKEN}`)
+      .post(`/api/phone/check?token=${process.env.API_TOKEN}`)
       .send({})
       .expect(400)
       .expect((res) => {
@@ -276,7 +277,7 @@ describe('POST /checkphone', () => {
 
   it('should find a customer with specific messenger id', (done) => {
     request(app)
-      .post(`/checkphone?token=${process.env.API_TOKEN}`)
+      .post(`/api/phone/check?token=${process.env.API_TOKEN}`)
       .send(body)
       .expect(200)
       .expect((res) => {
@@ -288,7 +289,7 @@ describe('POST /checkphone', () => {
 
 /* ================ */
 
-describe('POST /addphone', () => {
+describe('POST /api/phone/add', () => {
   let reject403 = 'Forbidden.';
   let reject400_1 = 'Bad request: No messenger id.';
   let reject400_2 = 'Bad request: No phone number.';
@@ -302,7 +303,7 @@ describe('POST /addphone', () => {
 
   it ('should reject permission if there is no api token', (done) => {
     request(app)
-      .post(`/addphone`)
+      .post(`/api/phone/add`)
       .send(body)
       .expect(403)
       .expect((res) => {
@@ -313,7 +314,7 @@ describe('POST /addphone', () => {
 
   it('should return 400 if there is no messenger id', (done) => {
     request(app)
-      .post(`/addphone?token=${process.env.API_TOKEN}`)
+      .post(`/api/phone/add?token=${process.env.API_TOKEN}`)
       .send({})
       .expect(400)
       .expect((res) => {
@@ -324,7 +325,7 @@ describe('POST /addphone', () => {
 
   it ('should return 400 if there is no phone number in request', (done) => {
     request(app)
-      .post(`/addphone?token=${process.env.API_TOKEN}`)
+      .post(`/api/phone/add?token=${process.env.API_TOKEN}`)
       .send({'messenger user id':'98765432123456789'})
       .expect(400)
       .expect((res) => {
@@ -336,7 +337,7 @@ describe('POST /addphone', () => {
   it('should add a new phone number for a customer', (done) => {
 
     request(app)
-      .post(`/addphone?token=${process.env.API_TOKEN}`)
+      .post(`/api/phone/add?token=${process.env.API_TOKEN}`)
       .send(body)
       .expect(200)
       .expect((res) => {
@@ -357,7 +358,7 @@ describe('POST /addphone', () => {
 
 /* ================ */
 
-describe('POST /updatephone', () =>{
+describe('POST /api/phone/update', () =>{
   let reject403 = 'Forbidden.';
   let reject400_1 = 'Bad request: No messenger id.';
   let reject400_2 = 'Bad request: No phone number.';
@@ -371,7 +372,7 @@ describe('POST /updatephone', () =>{
 
   it ('should reject permission if there is no api token', (done) => {
     request(app)
-      .post(`/updatephone`)
+      .post(`/api/phone/update`)
       .send(body)
       .expect(403)
       .expect((res) => {
@@ -382,7 +383,7 @@ describe('POST /updatephone', () =>{
 
   it('should return 400 if there is no messenger id', (done) => {
     request(app)
-      .post(`/updatephone?token=${process.env.API_TOKEN}`)
+      .post(`/api/phone/update?token=${process.env.API_TOKEN}`)
       .send({})
       .expect(400)
       .expect((res) => {
@@ -393,7 +394,7 @@ describe('POST /updatephone', () =>{
 
   it ('should return 400 if there is no phone number in request', (done) => {
     request(app)
-      .post(`/updatephone?token=${process.env.API_TOKEN}`)
+      .post(`/api/phone/update?token=${process.env.API_TOKEN}`)
       .send({'messenger user id':'98765432123456789'})
       .expect(400)
       .expect((res) => {
@@ -404,7 +405,7 @@ describe('POST /updatephone', () =>{
 
   it('should update a customer with new phone number', (done) => {
     request(app)
-      .post(`/updatephone?token=${process.env.API_TOKEN}`)
+      .post(`/api/phone/update?token=${process.env.API_TOKEN}`)
       .send(body)
       .expect(200)
       .expect((res) => {
