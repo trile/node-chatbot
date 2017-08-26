@@ -6,7 +6,14 @@ pipelines:
           - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 0.18.1
           - export PATH=$HOME/.yarn/bin:$PATH
           - yarn install
+          # authenticate with snyk
+          - node node_modules/snyk/cli auth ${SNYK_TOKEN} -d
+          # run snyk protect to apply any patches
+          - node node_modules/snyk/cli protect
+          # snyk test will run as part of npm test and fail if it finds vulnerabilities
           - yarn test
+          # snyk monitor updates the dependencies Snyk will monitor for new vulnerabilities
+          - if [ $BITBUCKET_BRANCH == "master" ]; then node node_modules/snyk/cli monitor; fi;
         services:
           - mongo
 
