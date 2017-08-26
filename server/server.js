@@ -3,6 +3,7 @@ require('./config/config');
 const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
+const helmet = require('helmet');
 
 const {mongoose} = require('./db/mongoose');
 
@@ -14,6 +15,7 @@ const {checkBody} = require('./middlewares/check-fbuser');
 let {Customer} = require('./models/customer');
 
 let app = express();
+app.use(helmet());
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
