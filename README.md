@@ -12,13 +12,16 @@ All app configurations including database url can be found at `server/config/con
 
 ## API endpoints
 
-### General endpoints
-`/setupcustomer`: retrieve customer set locale attribute if present.
+### customer endpoints
+`api/customer/setup`: retrieve customer set locale attribute if present.
+
+### locale endpoints
+`api/locale/setup`: set up the language/location for customer
 
 ### Phone number endpoints
-`/checkphone`: check if a customer already have a phone number.
-`/addphone`: add a phone number for a customer.
-`/updatephone`: update phone number for a customer.
+`api/phone/check`: check if a customer already have a phone number.
+`api/phone/add`: add a phone number for a customer.
+`api/phone/update`: update phone number for a customer.
 
 ## Commands
 To start server:
