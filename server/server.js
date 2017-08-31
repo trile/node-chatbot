@@ -12,8 +12,6 @@ const {Messages} = require('./messages');
 const {checkAPIKey} = require('./middlewares/authenticate');
 const {checkBody} = require('./middlewares/check-fbuser');
 
-let {Customer} = require('./models/customer');
-
 let router = require('./routes/index')
 
 let app = express();

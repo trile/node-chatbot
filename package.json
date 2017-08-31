@@ -7,7 +7,9 @@
     "start": "node server/server.js",
     "start-dev": "nodemon server/server.js",
     "test": "snyk test && export NODE_ENV=test && mocha server/**/*.test.js",
-    "test-watch": "nodemon --exec 'npm test'"
+    "test-api": "export NODE_ENV=test && mocha server/**/*.test.js",
+    "test-modules-update": "snyk test",
+    "test-watch": "nodemon --exec 'yarn test-api'"
   },
   "engines": {
     "node": "8.2.1"

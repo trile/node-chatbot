@@ -414,3 +414,53 @@ describe('POST /api/phone/update', () =>{
       .end(done);
   })
 })
+
+/* ================ */
+
+describe('POST /api/appointment/setup', () =>{
+  let reject403 = 'Forbidden.';
+  let reject400 = 'Bad request: No messenger id.';
+
+  let body =
+    {
+      'messenger user id': '98765432123456789',
+      'appointment fallback email': 'test@ovc_chatbot.com',
+      'appointment open time': '8AM',
+      'appointment close time': '6PM',
+      'appointment fallback block': 'Default Appoinment Message'
+    };
+  let responseText = `Cảm ơn bạn, chúng tôi đã cập nhật số điện thoại mới của bạn là ${body["phone number"]}`
+
+  it ('should reject permission if there is no api token', (done) => {
+    request(app)
+      .post(`/api/appointment/setup`)
+      .send(body)
+      .expect(403)
+      .expect((res) => {
+        expect(res.error.text).toBe(reject403);
+      })
+      .end(done);
+  });
+
+  it('should return 400 if there is no messenger id', (done) => {
+    request(app)
+      .post(`/api/appointment/setup?token=${process.env.API_TOKEN}`)
+      .send({})
+      .expect(400)
+      .expect((res) => {
+        expect(res.error.text).toBe(reject400);
+      })
+      .end(done);
+  });
+
+  it ('should return 200 if successfully setup Appointment Setting', (done) => {
+    request(app)
+      .post(`/api/appointment/setup?token=${process.env.API_TOKEN}`)
+      .send(body)
+      .expect(200)
+      .expect((res) => {
+      })
+      .end(done);
+  })
+
+})
