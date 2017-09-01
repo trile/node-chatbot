@@ -6,6 +6,8 @@ const customerId1 = new ObjectID();
 const customerId2 = new ObjectID();
 const customerId3 = new ObjectID();
 
+const appointmentId1 = new ObjectID();
+
 const customers = [
   {
     _id: customerId1,
@@ -24,10 +26,26 @@ const customers = [
   }
 ]
 
+const appointments = [
+  {
+    _id: appointmentId1,
+    email: 'test@next-bot.com',
+    open_time: '8AM',
+    close_time: '6PM',
+    fallback_block: 'Default Appointment Message'
+  }
+]
+
 const populateCustomers = (done) => {
-  Customer.remove({}).then(()=> {
+  Customer.remove({}).then(() => {
     return Customer.insertMany(customers);
   }).then(() => done());
 };
 
-module.exports = {customers, populateCustomers};
+const populateAppointments = (done) => {
+  Appointment.remove({}).then(() => {
+    return Appointment.insertMany(appointments);
+  }).then(()=> done());
+}
+
+module.exports = {customers, populateCustomers, populateAppointments};

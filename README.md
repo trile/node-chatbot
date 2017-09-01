@@ -12,16 +12,51 @@ All app configurations including database url can be found at `server/config/con
 
 ## API endpoints
 
+All the api calls need to be send will the app token
+**`https://<domain>/<api endpoint>?token=<app_token>`**
+
 ### customer endpoints
-`api/customer/setup`: retrieve customer set locale attribute if present.
+**`POST api/customer/setup`**:
+- Need params:
+  - `messenger user id`
+- create a new customer
+- retrieve customer set locale attribute if present.
 
 ### locale endpoints
-`api/locale/setup`: set up the language/location for customer
+**`POST api/locale/set`**:
+- Need params:
+  - `messenger user id`
+  - `language` (follow standard internalization: vi_VN, en_US, ...)
+- set up the language/location for customer
 
 ### Phone number endpoints
-`api/phone/check`: check if a customer already have a phone number.
-`api/phone/add`: add a phone number for a customer.
-`api/phone/update`: update phone number for a customer.
+**`POST api/phone/check`**:
+- Need params:
+  - `messenger user id`
+- check if a customer already have a phone number.
+
+**`POST api/phone/add`**:
+- Need params:
+  - `messenger user id`
+  - `phone number`
+- add a phone number for a customer.
+
+**`POST api/phone/update`**:
+- Params:
+  - `messenger user id`
+  - `appointment fallback email`
+  - `appointment open time`
+  - `appointment close time`
+  - `appointment fallback block`
+- update phone number for a customer.
+
+### Appointment endpoints
+**`POST /api/appointment/setup`**:
+- Params:
+  - `messenger user id`
+  -
+- Create a new Appointment settings where you can define the client parameters.
+- Update the current Appointment meeting if already present.
 
 ## Commands
 To start server:

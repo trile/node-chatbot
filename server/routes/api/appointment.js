@@ -53,13 +53,24 @@ appointmentRouter.post('/setup', [checkAPIKey, checkBody], (req, res, next) => {
           })
         }).catch((err) => next(err));
     } else {
-      res.status(200).send({
-        "messages": [
-          {
-            "text": Messages[customer.locale].appointmentSettingReady
-          }
-        ]
-      })
+      AppointmentSetting.findOneAndUpdate(
+        {email: appointmentSetting.email},
+        {$set: {
+          email: req.body['appointment fallback email'],
+          open_time:req.body['appointment open time'],
+          close_time:req.body['appointment close time'],
+          fallback_block:req.body['appointment fallback block']
+        }}
+      )
+      .then(() => {
+        res.status(200).send({
+          "messages": [
+            {
+              "text": Messages[customer.locale].appointmentSettingReady
+            }
+          ]
+        })
+      }).catch((err) => next(err));
     }
   })
   .catch((err) => next(err));
