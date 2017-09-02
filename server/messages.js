@@ -16,7 +16,8 @@ const Messages = {
     addphone: 'Thank you!',
     updatephone: assemble('Thank you, we have updated your new phone number as ${phone_number}', 'phone_number'),
 
-    appointmentSettingReady: 'Completed set up appointment settings',
+    appointmentSettingReady: 'Are you ready to book your appointment?',
+    appointment_button_start: 'Get start',
     get_appointment_date: 'What day are you looking to book the appointment?',
     get_appointment_part_of_day: 'Which part of day are you looking to book the appointment?',
     get_appointment_time: 'Please pick a time',
@@ -28,9 +29,10 @@ const Messages = {
     appointment_confirm_thanks: 'Thank you! We will contact to confirm your booking soon',
     appointment_button_confirm: 'Confirm',
     appointment_button_rest: 'Reset',
-    appointment_button_cancel: 'Cancel'
+    appointment_button_cancel: 'Cancel',
+    appointment_cancel: 'You have cancelled appointment booking process.'
   },
-  
+
   vi_VN : {
     setupcustomer_greeting: 'Chào {{first name}}!',
     setlocate: 'Cám ơn bạn! Ngôn ngữ của bạn đã được ghi nhớ!',
@@ -41,7 +43,8 @@ const Messages = {
     addphone: 'Cám ơn bạn',
     updatephone: assemble('Cảm ơn bạn, chúng tôi đã cập nhật số điện thoại mới của bạn là ${phone_number}', 'phone_number'),
 
-    appointmentSettingReady: 'Đã ghi nhớ thiết lập lịch hẹn',
+    appointmentSettingReady: 'Bạn đã sẵn sàng đặt lịch hẹn chưa?',
+    appointment_button_start: 'Bắt đầu',
     get_appointment_date: 'Bạn muốn đặt lịch hẹn vào ngày tháng nào?',
     get_appointment_part_of_day: 'Đặt lịch hẹn trong ngày',
     get_appointment_time: 'Xin vui lòng chọn thời gian',
@@ -53,7 +56,8 @@ const Messages = {
     appointment_confirm_thanks: 'Cảm ơn bạn! Chúng tôi sẽ liên hệ để xác nhận lịch hẹn sớm nhất',
     appointment_button_confirm: 'Xác nhận',
     appointment_button_rest: 'Đặt lại',
-    appointment_button_cancel: 'Đặt lại'
+    appointment_button_cancel: 'Huỷ',
+    appointment_cancel: "Bạn đã chọn huỷ đặt lịch hẹn."
   }
 }
 

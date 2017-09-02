@@ -11,6 +11,9 @@ let AppointmentSettingSchema = new mongoose.Schema({
   close_time: {
     type: String,
   },
+  timezone: {
+    type: String,
+  },
   fallback_block: {
     type: String
   }

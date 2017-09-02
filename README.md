@@ -19,6 +19,8 @@ All the api calls need to be send will the app token
 **`POST api/customer/setup`**:
 - Need params:
   - `messenger user id`
+- Return
+  - Will output a welcome message using preset language or dual language, then it will jump to a block named `Initiate Conversation` inside Chat Fuel
 - create a new customer
 - retrieve customer set locale attribute if present.
 

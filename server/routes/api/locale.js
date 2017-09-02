@@ -9,6 +9,7 @@ const {Messages} = require('../../messages');
 
 
 localeRouter.post('/set', [checkAPIKey, checkBody], (req, res, next) => {
+  console.log(req.body.language);
   if (!req.body['language']) {
     res.status(400).send('Bad request: No language.');
     return;
