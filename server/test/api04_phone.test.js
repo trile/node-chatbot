@@ -3,9 +3,9 @@ const request = require('supertest');
 
 const {app} = require('../server');
 const {Customer} = require('../models/customer');
-const {customers, populateCustomers} = require('./seed/seed');
+const {customers, populateSamples} = require('./seed/seed');
 
-beforeEach(populateCustomers);
+beforeEach(populateSamples);
 
 
 /* ================ */

@@ -17,7 +17,7 @@ let AppointmentSettingSchema = new mongoose.Schema({
   fallback_block: {
     type: String
   }
-})
+});
 
 let AppointmentSetting = mongoose.model('AppoinmentSetting', AppointmentSettingSchema);
 

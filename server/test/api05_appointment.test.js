@@ -4,23 +4,27 @@ const request = require('supertest');
 const {app} = require('../server');
 const {Customer} = require('../models/customer');
 const {AppointmentSetting} = require('../models/appointment_setting');
-const {customers, populateCustomers, populateAppointments} = require('./seed/seed');
+const {customers, populateSamples} = require('./seed/seed');
 
-beforeEach(populateCustomers, populateAppointments);
+
+beforeEach(populateSamples);
 
 /* ================ */
 
-describe('POST /api/appointment/setup', () =>{
+describe('POST /api/appointment/setup', () => {
+
+
   let reject403 = 'Forbidden.';
   let reject400 = 'Bad request: No messenger id.';
 
   let body_new =
     {
       'messenger user id': '98765432123456789',
-      'appointment fallback email': 'new.test@ovc_chatbot.com',
+      'appointment fallback email': 'newtest@next-bot.com',
       'appointment open time': '8AM',
       'appointment close time': '6PM',
-      'appointment fallback block': 'Default Appoinment Message'
+      'timezone': '7',
+      'appointment fallback block': 'Default Appointment Message'
     };
 
     let body_update =
@@ -29,10 +33,11 @@ describe('POST /api/appointment/setup', () =>{
         'appointment fallback email': 'test@next-bot.com',
         'appointment open time': '10AM',
         'appointment close time': '4PM',
+        'timezone': '7',
         'appointment fallback block': 'Default Appointment Message'
       };
 
-  let responseText = 'Completed set up appointment settings';
+  let responseText = 'Are you ready to book your appointment?';
 
   it ('should reject permission if there is no api token', (done) => {
     request(app)
@@ -62,7 +67,7 @@ describe('POST /api/appointment/setup', () =>{
       .send(body_new)
       .expect(200)
       .expect((res) => {
-        expect(res.body.messages[0].text).toBe(responseText);
+        expect(res.body.messages[0].attachment.payload.text).toBe(responseText);
       })
       .end(done);
   });
@@ -73,7 +78,7 @@ describe('POST /api/appointment/setup', () =>{
       .send(body_update)
       .expect(200)
       .expect((res) => {
-        expect(res.body.messages[0].text).toBe(responseText);
+        expect(res.body.messages[0].attachment.payload.text).toBe(responseText);
       })
       .end((err) => {
         if (err) return done(err);
@@ -87,4 +92,7 @@ describe('POST /api/appointment/setup', () =>{
       });
   })
 
+  it ('should return 200 if successfully update old Appointment Setting', (done) => {
+    done();
+  })
 })

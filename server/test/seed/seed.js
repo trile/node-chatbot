@@ -1,6 +1,7 @@
 const {ObjectID} = require('mongodb');
 
-const {Customer} = require('./../../models/customer');
+const {Customer} = require('../../models/customer');
+const {AppointmentSetting} = require('./../../models/appointment_setting');
 
 const customerId1 = new ObjectID();
 const customerId2 = new ObjectID();
@@ -24,7 +25,7 @@ const customers = [
     locale: 'vi_VN',
     phone_number: '123-456-7890'
   }
-]
+];
 
 const appointments = [
   {
@@ -32,20 +33,39 @@ const appointments = [
     email: 'test@next-bot.com',
     open_time: '8AM',
     close_time: '6PM',
+    timezone: '7',
     fallback_block: 'Default Appointment Message'
   }
-]
+];
 
-const populateCustomers = (done) => {
-  Customer.remove({}).then(() => {
-    return Customer.insertMany(customers);
-  }).then(() => done());
+const populateSamples = (done) => {
+
+  let customerRemoveP = Customer.remove({});
+  let appointmentRemoveP = AppointmentSetting.remove({});
+
+  Promise.all([customerRemoveP, appointmentRemoveP])
+  .then(() => {
+     let customerInsertP = Customer.insertMany(customers);
+     let appoinmentInsertP = AppointmentSetting.insertMany(appointments);
+
+     return Promise.all([customerInsertP, appoinmentInsertP])
+
+  })
+    .then(() => done());
 };
 
-const populateAppointments = (done) => {
-  Appointment.remove({}).then(() => {
-    return Appointment.insertMany(appointments);
-  }).then(()=> done());
-}
 
-module.exports = {customers, populateCustomers, populateAppointments};
+// const populateCustomers = (done) => {
+//   Customer.remove({}).then(() => {
+//     return Customer.insertMany(customers);
+//   }).then(() => done());
+// };
+//
+// const populateAppointments = (done) => {
+//   Appointment.remove({}).then(() => {
+//     return Appointment.insertMany(appointments);
+//   }).then(()=> done());
+// }
+
+
+module.exports = {customers, populateSamples};

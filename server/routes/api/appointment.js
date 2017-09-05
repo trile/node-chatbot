@@ -139,7 +139,7 @@ appointmentRouter.post('/getdate', [checkAPIKey, checkParam], (req, res, next) =
   }
   AppointmentSetting.findOne({email: req.query.appointment_email})
     .then((appointmentSetting) => {
-      console.log(appointmentSetting.timezone);
+      // console.log(appointmentSetting.timezone);
       res.status(200).send({OK})
     })
     .catch((err)=> next(err));
