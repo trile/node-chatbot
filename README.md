@@ -17,46 +17,63 @@ All the api calls need to be send will the app token
 
 ### customer endpoints
 **`POST api/customer/setup`**:
+
 - Need params:
-  - `messenger user id`
-- Return
-  - Will output a welcome message using preset language or dual language, then it will jump to a block named `Initiate Conversation` inside Chat Fuel
+    - `messenger user id`
+
+- Return:
+    - A text message depend on user language
+    - Redirect to a block named `Initiate Conversation` inside Chat Fuel.
+
 - create a new customer
 - retrieve customer set locale attribute if present.
 
 ### locale endpoints
 **`POST api/locale/set`**:
+
 - Need params:
-  - `messenger user id`
-  - `language` (follow standard internalization: vi_VN, en_US, ...)
+    - `messenger user id`
+    - `language` (follow standard internalization: vi_VN, en_US, ...)
+
+- Return:
+    - A text confirm to user that the language had been set.
+    - Redirect to a block named `Finish Customer Locale` inside Chat Fuel.
+
 - set up the language/location for customer
 
 ### Phone number endpoints
 **`POST api/phone/check`**:
+
 - Need params:
-  - `messenger user id`
+    - `messenger user id`
+
 - check if a customer already have a phone number.
 
 **`POST api/phone/add`**:
+
 - Need params:
-  - `messenger user id`
-  - `phone number`
+    - `messenger user id`
+    - `phone number`
+
 - add a phone number for a customer.
 
 **`POST api/phone/update`**:
+
 - Params:
-  - `messenger user id`
-  - `appointment fallback email`
-  - `appointment open time`
-  - `appointment close time`
-  - `appointment fallback block`
+    - `messenger user id`
+
 - update phone number for a customer.
 
 ### Appointment endpoints
 **`POST /api/appointment/setup`**:
+
 - Params:
-  - `messenger user id`
-  -
+    - `messenger user id`
+    - `appointment fallback email`
+    - `appointment open time`
+    - `appointment close time`
+    - `appointment fallback block`
+
 - Create a new Appointment settings where you can define the client parameters.
 - Update the current Appointment meeting if already present.
 
