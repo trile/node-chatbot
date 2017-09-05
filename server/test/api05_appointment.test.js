@@ -91,8 +91,4 @@ describe('POST /api/appointment/setup', () => {
           .catch((err) => done(err));
       });
   })
-
-  it ('should return 200 if successfully update old Appointment Setting', (done) => {
-    done();
-  })
 })
