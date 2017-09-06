@@ -1,10 +1,10 @@
-# OVC-Chatbot
+# Next-bot
 
 ## Descriptions
 
 This is the source code for OVC chatbot API.
 Please [read the PRD](http://bit.ly/2voU8bQ)
-Respo: [bitbucket](https://bitbucket.org/account/user/solutions-union/projects/OV)
+Respo: [bitbucket](https://bitbucket.org/solutions-union/next-bot)
 
 ## Requirement
 Correctly set up Mongo database server.
@@ -83,7 +83,7 @@ yarn test-watch
 ```
 
 ## Deployment on Heroku
-App Url: https://ovc-chatbot-sun.herokuapp.com/
+App Url: https://nextbot-sun.herokuapp.com/
 Need to set appropriate environment variables:
 `PORT`
 `MONGO_URI`
