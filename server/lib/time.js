@@ -42,17 +42,3 @@ function getAvailabeTimeSlot(dateString, intervalMinute, offsetToNow) {
 }
 
 console.log(getAvailabeTimeSlot('03/09/2017', 60, 3));
-
-
-// var getTimeLeft = function(){
-//   var now = moment();
-//   var deadline = now.clone().hour(12).minute(0).second(0);
-//   if (now.isAfter(deadline)) {
-//     // disable RSVP button here
-//     return 'Closed';
-//   } else {
-//     // enable RSVP button here
-//     // returns “in x hours”, “in x minutes”, “in a few seconds”
-//     return deadline.from(now);
-//   }
-// };
