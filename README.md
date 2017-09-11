@@ -16,7 +16,9 @@ All the api calls need to be send will the app token
 **`https://<domain>/<api endpoint>?token=<app_token>`**
 
 ### customer endpoints
+
 **`POST api/customer/setup`**:
+
 - Need params:
     - `messenger user id`
 - Return:
@@ -88,3 +90,43 @@ Need to set appropriate environment variables:
 `PORT`
 `MONGO_URI`
 `API_TOKEN`
+
+## How to clone a bot
+- Set up a new mongo db from mlab
+    - Create a new user and get the credentials
+- Set up a new Heroku app. Get your own Heroku token
+    - Create following environment varibales:
+        - `PORT`
+        - `MONGO_URI`
+        - `API_TOKEN`
+- Go to next-bot repo,
+    - Click + sign on the narrow left column
+    - Choose to fork the repo, enter required information
+- Go to your new clone repository
+    - Go to Pipelines, enable it, the first run will failed.
+    - Go to Settings > environment variables. Provide it with the followings:
+        - `SNYK_TOKEN`
+        - `HEROKU_APP_NAME`
+        - `HEROKU_API_KEY`
+    - Go and rerun pipelines, after the test passed it should deploy to Heroku
+
+- To update your cloned bot from newest Next-bot
+    - Clone the repo to your local
+    - Add Heroku remote ( for using heroku-cli)
+    `git remote add heroku https://git.heroku.com/<app-name>.git`
+    - Add upstream to point to next-bot
+    `git remote add upstream `https://<username>@bitbucket.org/solutions-union/next-bot.git`
+    - To update the child bot:
+    `git pull upstream master`
+    `git push`
+    - To see heroku server log:
+    `git logs -t`
+
+- IMPORTANT - EXPERIMENTAL: Update the cloned bot FROM Bitbucket control panel
+    - Go to cloned bot repo
+    - Go to Branches
+    - Add `compare` after the url
+    - Choose the appropriate source and destination, click compare
+    - There will be a link to merge your different
+        - MAKE SURE THE SOURCE OF THE MERGE IS NEXT-BOT
+        - THE MESSAGE SHOULD BE LIKE "Merged solutions-union/next-bot into master"
