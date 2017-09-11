@@ -16,7 +16,6 @@ All the api calls need to be send will the app token
 **`https://<domain>/<api endpoint>?token=<app_token>`**
 
 ### customer endpoints
-
 **`POST api/customer/setup`**:
 
 - Need params:
@@ -29,6 +28,7 @@ All the api calls need to be send will the app token
 
 ### locale endpoints
 **`POST api/locale/set`**:
+
 - Need params:
     - `messenger user id`
     - `language` (follow standard internalization: vi_VN, en_US, ...)
@@ -39,6 +39,7 @@ All the api calls need to be send will the app token
 
 ### Phone number endpoints
 **`POST api/phone/check`**:
+
 - Need params:
     - `messenger user id`
 - Return
@@ -47,18 +48,21 @@ All the api calls need to be send will the app token
 - check if a customer already have a phone number.
 
 **`POST api/phone/add`**:
+
 - Need params:
     - `messenger user id`
     - `phone number`
 - Add a phone number for a customer.
 
 **`POST api/phone/update`**:
+
 - Params:
     - `messenger user id`
 - update phone number for a customer.
 
 ### Appointment endpoints
 **`POST /api/appointment/setup`**:
+
 - Params:
     - `messenger user id`
     - `appointment fallback email`
