@@ -35,11 +35,10 @@ All the api calls need to be send will the app token
 - Return:
     - A text confirm to user that the language had been set.
     - Redirect to a block named `Finish Customer Locale` inside Chat Fuel.
-- set up the language/location for customer
+    - **set ChatFuel properties `language` for customer**
 
 ### Phone number endpoints
 **`POST api/phone/check`**:
-
 - Need params:
     - `messenger user id`
 - Return
@@ -65,14 +64,17 @@ All the api calls need to be send will the app token
 
 - Params:
     - `messenger user id`
-    - `appointment fallback email`
-    - `appointment open time`
-    - `appointment close time`
-    - `appointment fallback block`
+    - `appointment fallback email`: client email
+    - `appointment open time`: time to start accepting appointment
+    - `appointment close time`: time to stop accepting appointment
+    - `timezone`: client timezone
+    - `appointment fallback block`: a block for undefined behavior
 - Create a new Appointment settings where you can define the client parameters.
 - Update the current Appointment meeting if already present.
 
-## Commands
+## Development
+
+### Commands
 To start server:
 ```bash
 yarn start
@@ -98,14 +100,17 @@ Need to set appropriate environment variables:
 ## How to clone a bot
 - Set up a new mongo db from mlab
     - Create a new user and get the credentials
+
 - Set up a new Heroku app. Get your own Heroku token
     - Create following environment varibales:
         - `PORT`
         - `MONGO_URI`
         - `API_TOKEN`
+
 - Go to next-bot repo,
     - Click + sign on the narrow left column
     - Choose to fork the repo, enter required information
+
 - Go to your new clone repository
     - Go to Pipelines, enable it, the first run will failed.
     - Go to Settings > environment variables. Provide it with the followings:
