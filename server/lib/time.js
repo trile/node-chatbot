@@ -2,43 +2,61 @@ let moment = require('moment');
 
 let now = moment().utcOffset(7);
 
-console.log(now.weekday()); //get day of the weekday
-console.log(now.format("DD/MM/YY")); //get day of the weekday
+// console.log(now.weekday()); //get day of the weekday
+// console.log(now.format("DD/MM/YY")); //get day of the weekday
 
 
 /* Function that return the available time slots for a specific to a date*/
 
-function getAvailabeTimeSlot(dateString, intervalMinute, offsetToNow) {
+function getAvailableDate(dateString, timezone, noOfDate) {
+    let dateIter = moment(dateString, 'DD/MM/YYYY');
 
-    let start = moment(dateString, 'DD/MM/YYYY');
-    start = start.utcOffset(7).hour(3).minute(0).second(0);
-    console.log(start);
+    dateIter = dateIter.utcOffset(parseInt(timezone));
+    let count = 0;
+    let result = [];
+    while (count < noOfDate) {
+      dateIter.add(1, 'd');
+      if (dateIter.day() === 6 || dateIter.day() ===0)
+        continue;
+      else {
+        count++;
+        result.push(dateIter.unix());
+      }
+    }
+    return result;
+}
 
-    let limit = moment().utcOffset(7).add(offsetToNow, 'hours')
+function getAvailableTime(dateString, startTimeStr, endTimeStr, intervalMinute, timezone, startBreakStr, endBreakStr) {
 
-    let end = start.clone().hour(18).minute(0).second(0)
-    let startBreak = start.clone().hour(11).minute(59).second(0)
-    let endBreak = start.clone().hour(12).minute(59).second(0)
+    let start = moment(dateString + ' ' + startTimeStr, 'DD/MM/YY hh:mm').utcOffset(timezone);
+    let end = moment(dateString + ' ' + endTimeStr, 'DD/MM/YY hh:mm').utcOffset(timezone);
+    let startBreak = null;
+    let endBreak = null;
+    if (startBreakStr) startBreak = moment(dateString + ' ' + startBreakStr, 'DD/MM/YY hh:mm').utcOffset(timezone);
+    if (endBreakStr) endBreak = moment(dateString + ' ' + endBreakStr, 'DD/MM/YY hh:mm').utcOffset(timezone);
 
-    // Round starting time closet internal
-    start.minutes(Math.ceil(start.minutes() / intervalMinute) * intervalMinute);
 
     var result = [];
 
-    var slot = moment(start);
+    var slot = start;
 
-    while (slot<= end) {
-        if (slot>startBreak && slot<endBreak) {
+    while (slot < end) {
+        if (slot>=startBreak && slot<endBreak) {
           slot.add(intervalMinute, 'minutes');
           continue;
         }
-        if (slot > limit ) {
-          result.push(slot.format('HH:mm'));
-        }
+        // if (slot > limit ) {
+          result.push(slot.unix());
+        // }
         slot.add(intervalMinute, 'minutes');
     }
 
     return result;
 }
 
-console.log(getAvailabeTimeSlot('03/09/2017', 60, 3));
+// result = getAvailabeTime('03/09/2017', '9:00', '17:00', 60, '7', '12:00', "13:00");
+// result.map( (time)=> {
+//   console.log(moment.unix(time).format('MM-DD hh:mm'))
+// })
+
+module.exports = {getAvailableDate, getAvailableTime};

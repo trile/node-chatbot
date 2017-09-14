@@ -1,4 +1,4 @@
-function assemble(literal, params) {
+function assemble(literal, ...params) {
     return new Function(params, 'return `'+literal+'`;');
 }
 
@@ -25,7 +25,7 @@ const Messages = {
     appointment_time_morning: 'Morning',
     appointment_time_afternoon: 'Afternoon',
     appointment_time_evening: 'Evening',
-    appointment_confirm: 'Your appointment is scheduled on ${appointment_date} at {appointment_time}',
+    appointment_confirm: assemble('Your appointment is scheduled on ${appointment_date} at ${appointment_time}', 'appointment_date', 'appointment_time'),
     appointment_confirm_thanks: 'Thank you! We will contact to confirm your booking soon',
     appointment_button_confirm: 'Confirm',
     appointment_button_rest: 'Reset',
@@ -45,7 +45,7 @@ const Messages = {
 
     appointmentSettingReady: 'Bạn đã sẵn sàng đặt lịch hẹn chưa?',
     appointment_button_start: 'Bắt đầu',
-    get_appointment_date: 'Bạn muốn đặt lịch hẹn vào ngày tháng nào?',
+    get_appointment_date: 'Bạn muốn đặt lịch hẹn vào ngày nào?',
     get_appointment_part_of_day: 'Đặt lịch hẹn trong ngày',
     get_appointment_time: 'Xin vui lòng chọn thời gian',
     change_appoiment_time: 'Thời gian chưa phù hợp với bạn?',

@@ -10,7 +10,7 @@ function checkBody(req, res, next) {
 }
 
 function checkParam(req, res, next) {
-  if (!req.query.user_id) {
+  if (!req.query.fb_user_id) {
     res.status(400).send('Bad request: No messenger id.');
   }
   else {

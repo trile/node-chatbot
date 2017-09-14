@@ -13,6 +13,9 @@ let CustomerSchema = new mongoose.Schema({
   phone_number: {
     type: String,
     trim: true
+  },
+  appointment: {
+    type: Number
   }
 });
 
