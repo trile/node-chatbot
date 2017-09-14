@@ -24,6 +24,7 @@ describe('POST /api/appointment/setup', () => {
       'appointment open time': '8AM',
       'appointment close time': '6PM',
       'timezone': '7',
+      'appointment duration': '30',
       'appointment fallback block': 'Default Appointment Message'
     };
 
@@ -34,6 +35,7 @@ describe('POST /api/appointment/setup', () => {
         'appointment open time': '10AM',
         'appointment close time': '4PM',
         'timezone': '7',
+        'appointment duration': '60',
         'appointment fallback block': 'Default Appointment Message'
       };
 

@@ -9,7 +9,7 @@
     "test": "snyk test && export NODE_ENV=test && mocha server/**/*.test.js",
     "test-api": "export NODE_ENV=test && mocha server/**/*.test.js",
     "test-modules-update": "snyk test",
-    "test-watch": "nodemon --exec 'yarn test-api'"
+    "test:watch": "nodemon --exec 'yarn test-api'"
   },
   "engines": {
     "node": "8.2.1"
