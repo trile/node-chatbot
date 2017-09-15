@@ -12,7 +12,7 @@
     "test:watch": "nodemon --exec 'yarn test-api'"
   },
   "engines": {
-    "node": "8.2.1"
+    "node": "8.3.0"
   },
   "author": "Tri Le",
   "license": "ISC",
@@ -23,7 +23,8 @@
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
     "mongodb": "^2.2.30",
-    "mongoose": "^4.11.5"
+    "mongoose": "^4.11.5",
+    "nodemailer": "^4.1.0"
   },
   "devDependencies": {
     "crypto": "^0.0.3",

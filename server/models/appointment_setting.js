@@ -1,15 +1,9 @@
 let mongoose = require('mongoose');
 
 let AppointmentSettingSchema = new mongoose.Schema({
-  email: {
+  client_email: {
     type: String,
     trim: true
-  },
-  open_time: {
-    type: String,
-  },
-  close_time: {
-    type: String,
   },
   timezone: {
     type: String,
@@ -17,8 +11,26 @@ let AppointmentSettingSchema = new mongoose.Schema({
   duration: {
     type: Number
   },
-  fallback_block: {
-    type: String
+  open_morning: {
+    type: String,
+  },
+  close_morning: {
+    type: String,
+  },
+
+  open_afternoon: {
+    type: String,
+  },
+  
+  close_afternoon: {
+    type: String,
+  },
+
+  open_evening: {
+    type: String,
+  },
+  close_evening: {
+    type: String,
   }
 });
 

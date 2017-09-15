@@ -76,7 +76,10 @@ phoneRouter.post('/add', [checkAPIKey, checkBody], (req, res, next) => {
     res.status(200).send({
       "messages": [
          {"text": Messages[customer.locale].addphone}
-      ]
+      ],
+      "set_attributes": {
+        "phone number": customer.phone_number
+      }
     })
   })
   .catch((err) => next(err));
@@ -104,7 +107,10 @@ phoneRouter.post('/update', [checkAPIKey, checkBody], (req, res, next) => {
     res.status(200).send({
       "messages": [
         {"text": Messages[customer.locale].updatephone(customer.phone_number)}
-      ]
+      ],
+      "set_attributes": {
+        "phone number": customer.phone_number
+      }
     })
   })
   .catch((err) => next(err));

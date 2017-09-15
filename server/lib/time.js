@@ -10,7 +10,6 @@ let now = moment().utcOffset(7);
 
 function getAvailableDate(dateString, timezone, noOfDate) {
     let dateIter = moment(dateString, 'DD/MM/YYYY');
-
     dateIter = dateIter.utcOffset(parseInt(timezone));
     let count = 0;
     let result = [];
@@ -26,28 +25,16 @@ function getAvailableDate(dateString, timezone, noOfDate) {
     return result;
 }
 
-function getAvailableTime(dateString, startTimeStr, endTimeStr, intervalMinute, timezone, startBreakStr, endBreakStr) {
+function getAvailableTime(dateString, startTimeStr, endTimeStr, intervalMinute, timezone) {
 
     let start = moment(dateString + ' ' + startTimeStr, 'DD/MM/YY hh:mm').utcOffset(timezone);
     let end = moment(dateString + ' ' + endTimeStr, 'DD/MM/YY hh:mm').utcOffset(timezone);
-    let startBreak = null;
-    let endBreak = null;
-    if (startBreakStr) startBreak = moment(dateString + ' ' + startBreakStr, 'DD/MM/YY hh:mm').utcOffset(timezone);
-    if (endBreakStr) endBreak = moment(dateString + ' ' + endBreakStr, 'DD/MM/YY hh:mm').utcOffset(timezone);
-
 
     var result = [];
-
     var slot = start;
 
     while (slot < end) {
-        if (slot>=startBreak && slot<endBreak) {
-          slot.add(intervalMinute, 'minutes');
-          continue;
-        }
-        // if (slot > limit ) {
-          result.push(slot.unix());
-        // }
+        result.push(slot.unix());
         slot.add(intervalMinute, 'minutes');
     }
 

@@ -11,33 +11,28 @@ const {Messages} = require('../../messages');
 const {getAvailableDate, getAvailableTime} = require('../../lib/time');
 
 appointmentRouter.post('/setup', [checkAPIKey, checkBody], (req, res, next) => {
-  if (!req.body['appointment fallback email']) {
-    res.status(400).send('Bad request: No appointment fall back email');
-    return;
-  }
-  if (!req.body['appointment open time']) {
-    res.status(400).send('Bad request: No appointment open time');
-    return;
-  }
-  if (!req.body['appointment close time']) {
-    res.status(400).send('Bad request: No appointment close time');
-    return;
-  }
-  if (!req.body['appointment fallback block']) {
-    res.status(400).send('Bad request: No appointment fall back block');
-    return;
-  }
-  if (!req.body['timezone']) {
-    res.status(400).send('Bad request: No timezone');
-    return;
-  }
-  if (!req.body['appointment duration']) {
-    res.status(400).send('Bad request: No appointment duration');
-    return;
-  }
+
+  if (!req.body['client email']) return res.status(400).send('Bad request: No client email');
+
+  if (!req.body['open morning']) return res.status(400).send('Bad request: No morning open time');
+
+  if (!req.body['close morning']) return res.status(400).send('Bad request: No morning close time');
+
+  if (!req.body['open afternoon']) return res.status(400).send('Bad request: No afternoon open time');
+
+  if (!req.body['close afternoon']) return res.status(400).send('Bad request: No afternoon close time');
+
+  if (!req.body['open evening']) return res.status(400).send('Bad request: No evening open time');
+
+  if (!req.body['close evening']) return res.status(400).send('Bad request: No evening close time');
+
+  if (!req.body['timezone']) return res.status(400).send('Bad request: No timezone');
+
+  if (!req.body['duration']) return res.status(400).send('Bad request: No appointment duration');
+
 
   let appointmentP =  AppointmentSetting.findOne({
-    email: req.body['appointment fallback email']
+    client_email: req.body['client email']
   });
 
   let customerP = Customer.findOne({
@@ -48,37 +43,32 @@ appointmentRouter.post('/setup', [checkAPIKey, checkBody], (req, res, next) => {
   .then( ([appointmentSetting, customer]) => {
     if (!appointmentSetting) {
       let newAppointmentSetting = new AppointmentSetting({
-          email: req.body['appointment fallback email'],
-          open_time:req.body['appointment open time'],
-          close_time:req.body['appointment close time'],
+          client_email: req.body['client email'],
+          open_morning:req.body['open morning'],
+          close_morning:req.body['close morning'],
+          open_afternoon:req.body['open afternoon'],
+          close_afternoon:req.body['close afternoon'],
+          open_evening:req.body['open evening'],
+          close_evening:req.body['close evening'],
           timezone:req.body['timezone'],
-          duration: req.body['appointment duration'],
-          fallback_block:req.body['appointment fallback block']
+          duration: req.body['duration']
       });
       newAppointmentSetting.save()
         .then(() => {
           res.status(200).send({
             "messages": [
               {
-                "attachment": {
-                  "type": "template",
-                  "payload":{
-                    "template_type": "button",
-                    "text": Messages[customer.locale].appointmentSettingReady,
-                    "buttons": [
-                      {
-                        "type": "show_block",
-                        "block_names":  ["Get and Set Date"],
-                        "title": Messages[customer.locale].appointment_button_start
-                      },
-                      {
-                        "url": `https://${req.hostname}/api/appointment/cancel?token=${req.query.token}&user_id=${customer.messenger_user_id}`,
-                        "type": "json_plugin_url",
-                        "title": Messages[customer.locale].appointment_button_cancel
-                      }
-                    ]
+                "text":  Messages[customer.locale].appointmentSettingReady,
+                "quick_replies": [
+                  {
+                    "title":Messages[customer.locale].appointment_button_start,
+                    "block_names": ["Get and Set Date"]
+                  },
+                  {
+                    "title":Messages[customer.locale].appointment_button_cancel,
+                    "block_names": ["Cancel Appointment Booking"]
                   }
-                }
+                ]
               }
             ]
           })
@@ -87,37 +77,32 @@ appointmentRouter.post('/setup', [checkAPIKey, checkBody], (req, res, next) => {
       AppointmentSetting.findOneAndUpdate(
         {email: appointmentSetting.email},
         {$set: {
-          email: req.body['appointment fallback email'],
-          open_time: req.body['appointment open time'],
-          close_time: req.body['appointment close time'],
+          client_email: req.body['client email'],
+          open_morning:req.body['open morning'],
+          close_morning:req.body['close morning'],
+          open_afternoon:req.body['open afternoon'],
+          close_afternoon:req.body['close afternoon'],
+          open_evening:req.body['open evening'],
+          close_evening:req.body['close evening'],
           timezone:req.body['timezone'],
-          duration: req.body['appointment duration'],
-          fallback_block:req.body['appointment fallback block']
+          duration: req.body['duration']
         }}
       )
       .then(() => {
         res.status(200).send({
           "messages": [
             {
-              "attachment": {
-                "type": "template",
-                "payload":{
-                  "template_type": "button",
-                  "text": Messages[customer.locale].appointmentSettingReady,
-                  "buttons": [
-                    {
-                      "type": "show_block",
-                      "block_names":  ["Get and Set Date"],
-                      "title": Messages[customer.locale].appointment_button_start
-                    },
-                    {
-                      "url": `https://${req.hostname}/api/appointment/cancel?token=${req.query.token}&fb_user_id=${customer.messenger_user_id}`,
-                      "type": "json_plugin_url",
-                      "title": Messages[customer.locale].appointment_button_cancel
-                    }
-                  ]
+              "text":  Messages[customer.locale].appointmentSettingReady,
+              "quick_replies": [
+                {
+                  "title":Messages[customer.locale].appointment_button_start,
+                  "block_names": ["Get and Set Date"]
+                },
+                {
+                  "title":Messages[customer.locale].appointment_button_cancel,
+                  "block_names": ["Cancel Appointment Booking"]
                 }
-              }
+              ]
             }
           ]
         })
@@ -127,30 +112,18 @@ appointmentRouter.post('/setup', [checkAPIKey, checkBody], (req, res, next) => {
   .catch((err) => next(err));
 })
 
-appointmentRouter.post('/cancel', [checkAPIKey, checkParam], (req, res, next) => {
-  Customer.findOne({messenger_user_id: req.query.user_id})
-  .then((customer) => {
-    res.status(200).send({
-      "messages": [
-        {"text": Messages[customer.locale].appointment_cancel}
-      ]
-    })
-  })
-  .catch((err) => next(err));
-});
-
-appointmentRouter.post('/getdate', [checkAPIKey, checkParam], (req, res, next) => {
-  if (!req.query.appointment_email) {
+appointmentRouter.post('/getdate', [checkAPIKey, checkBody], (req, res, next) => {
+  if (!req.body['client email']) {
     res.status(400).send('Bad request: No appointment email');
     return;
   }
 
   let appointmentP =  AppointmentSetting.findOne({
-    email: req.query.appointment_email
+    client_email: req.body['client email']
   });
 
   let customerP = Customer.findOne({
-    messenger_user_id: req.query.fb_user_id
+    messenger_user_id: req.body['messenger user id']
   });
 
   //Need to find the appointment settings using email. Supposed to be the only one in client database.
@@ -160,7 +133,7 @@ appointmentRouter.post('/getdate', [checkAPIKey, checkParam], (req, res, next) =
       let dateOptions = result.map((dateString) => {
         const date = moment.unix(dateString);
         return {
-          "url": `https://${req.hostname}/api/appointment/setdate?token=${req.query.token}&fb_user_id=${customer.messenger_user_id}&appointment_email=${req.query.appointment_email}&date=${date.unix()}`,
+          "url": `https://${req.hostname}/api/appointment/setdate?token=${req.query.token}&fb_user_id=${customer.messenger_user_id}&appointment_email=${appointmentSetting.client_email}&date=${date.unix()}`,
           "type": "json_plugin_url",
           "title": `${Messages[customer.locale].dayOfWeek[date.day()]} ${date.format('D')}`
         }
@@ -198,10 +171,68 @@ appointmentRouter.post('/setdate', [checkAPIKey, checkParam], (req, res, next) =
   )
   .then((customer) => {
     res.status(200).send({
-      "redirect_to_blocks": ["Get And Set Time"]
+      "set_attributes": {
+          "date appointment": date.format('DD/MM/YY'),
+      },
+      "redirect_to_blocks": ["Get and Set Time"]
     })
   })
   .catch((err)=> next(err));
+})
+
+appointmentRouter.post('/getdaypart', [checkAPIKey, checkBody], (req, res, next) => {
+  if (!req.body['client email']) {
+    res.status(400).send('Bad request: No appointment email');
+    return;
+  }
+
+  let appointmentP =  AppointmentSetting.findOne({
+    client_email: req.body['client email']
+  });
+
+  let customerP = Customer.findOne({
+    messenger_user_id: req.body['messenger user id']
+  });
+
+  Promise.all([appointmentP, customerP])
+    .then(([appointmentSetting, customer]) => {
+      let replyText = Messages[customer.locale].get_appointment_part_of_day;
+      let quickReplyOptions = [];
+      if (appointmentSetting.open_morning !== 'null') {
+        replyText += '\n' + Messages[customer.locale].schedule_morning(appointmentSetting.open_morning, appointmentSetting.close_morning);
+        quickReplyOptions.push({
+          "title": Messages[customer.locale].morning,
+          "type": "json_plugin_url",
+          "url": `https://${req.hostname}/api/appointment/gettime?token=${req.query.token}&fb_user_id=${customer.messenger_user_id}&appointment_email=${appointmentSetting.client_email}&daypart=morning`,
+        })
+      }
+      if (appointmentSetting.open_afternoon !== 'null') {
+        replyText += '\n' + Messages[customer.locale].schedule_afternoon(appointmentSetting.open_afternoon, appointmentSetting.close_afternoon);
+        quickReplyOptions.push({
+          "title": Messages[customer.locale].afternoon,
+          "type": "json_plugin_url",
+          "url": `https://${req.hostname}/api/appointment/gettime?token=${req.query.token}&fb_user_id=${customer.messenger_user_id}&appointment_email=${appointmentSetting.client_email}&daypart=afternoon`,
+        })
+      }
+      if (appointmentSetting.open_evening !== 'null') {
+        replyText += '\n' + Messages[customer.locale].schedule_evening(appointmentSetting.open_evening, appointmentSetting.close_evening);
+        quickReplyOptions.push({
+          "title": Messages[customer.locale].evening,
+          "type": "json_plugin_url",
+          "url": `https://${req.hostname}/api/appointment/gettime?token=${req.query.token}&fb_user_id=${customer.messenger_user_id}&appointment_email=${appointmentSetting.client_email}&daypart=evening`,
+        })
+      }
+
+      res.status(200).send({
+        "messages": [
+          {
+            "text":  replyText,
+            "quick_replies": quickReplyOptions
+          }
+        ]
+      })
+    })
+    .catch((err)=> next(err));
 })
 
 appointmentRouter.post('/gettime', [checkAPIKey, checkParam], (req, res, next) => {
@@ -211,7 +242,7 @@ appointmentRouter.post('/gettime', [checkAPIKey, checkParam], (req, res, next) =
   }
 
   let appointmentP =  AppointmentSetting.findOne({
-    email: req.query.appointment_email
+    client_email: req.query.appointment_email
   });
 
   let customerP = Customer.findOne({
@@ -224,11 +255,12 @@ appointmentRouter.post('/gettime', [checkAPIKey, checkParam], (req, res, next) =
       if (!customer.appointment) {
         res.status(500).send('Internal error: Appointment date for customer is not set');
       }
+
       //getAvailabeTime(dateString, startTimeStr, endTimeStr, intervalMinute, timezone, startBreakStr, endBreakStr)
       let result = getAvailableTime(
         moment.unix(customer.appointment).format('DD/MM/YY'),
-        appointmentSetting.open_time,
-        appointmentSetting.close_time,
+        appointmentSetting['open_'+req.query.daypart],
+        appointmentSetting['close_'+req.query.daypart],
         appointmentSetting.duration,
         appointmentSetting.timezone
       );
@@ -237,34 +269,9 @@ appointmentRouter.post('/gettime', [checkAPIKey, checkParam], (req, res, next) =
         return {
           "url": `https://${req.hostname}/api/appointment/settime?token=${req.query.token}&fb_user_id=${customer.messenger_user_id}&appointment_email=${req.query.appointment_email}&time=${time.unix()}`,
           "type": "json_plugin_url",
-          "title": time.format('hh:mm')
+          "title": time.format('HH:mm')
         }
       })
-
-      // let quickrepliesArray = [];
-      // let i = 0;
-      // let j = 0;
-      // if (timeOptions.length > 11) {
-      //   while (i < timeOptions.length) {
-      //     quickrepliesArray[j]=timeOptions.slice(i, i+10);
-      //     i = i + 10;
-      //     j = j + 1;
-      //   }
-      // }
-      //
-      // console.log(quickrepliesArray);
-      // console.log(timeOptions);
-      // let resObj = {
-      //   messages: []
-      // }
-      // i = 0;
-      // while (i < quickrepliesArray.length) {
-      //   resObj.messages.push({
-      //     "text":  Messages[customer.locale].get_appointment_time,
-      //     "quick_replies": quickrepliesArray[i]
-      //   });
-      //   i++;
-      // }
 
       let resObj = {
         "messages": [
@@ -294,7 +301,6 @@ appointmentRouter.post('/settime', [checkAPIKey, checkParam], (req, res, next) =
 
 
   const time = moment.unix(req.query.time);
-  console.log(time.format('DD/MM/YY hh:mm'));
 
   Customer.findOneAndUpdate(
     {messenger_user_id: req.query.fb_user_id},
@@ -304,9 +310,27 @@ appointmentRouter.post('/settime', [checkAPIKey, checkParam], (req, res, next) =
   .then((customer) => {
     res.status(200).send({
       "messages" : [
-        {"text": Messages[customer.locale].appointment_confirm(time.format('DD/MM/YY'), time.format('hh:mm'))}
+        {
+          "text": Messages[customer.locale].appointment_verify(time.format('DD/MM/YY'), time.format('HH:mm')),
+          "quick_replies": [
+            {
+              "title":Messages[customer.locale].appointment_button_confirm,
+              "block_names": ["Finish Appointment Booking"]
+            },
+            {
+              "title":Messages[customer.locale].appointment_button_change,
+              "block_names": ["Setup Appointment Settings"]
+            },
+            {
+              "title":Messages[customer.locale].appointment_button_cancel,
+              "block_names": ["Cancel Appointment Booking"]
+            }
+          ]
+        }
       ],
-      "redirect_to_blocks": ["Done Set Time"]
+      "set_attributes": {
+        "hour appointment": time.format('HH:mm'),
+      }
     })
   })
   .catch((err)=> next(err));
