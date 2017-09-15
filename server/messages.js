@@ -59,7 +59,7 @@ const Messages = {
     change_appoiment_time: 'Thời gian chưa phù hợp với bạn?',
     morning: 'Buổi sáng',
     afternoon: 'Buổi chiều',
-    evening: 'Buồi tối',
+    evening: 'Buổi tối',
     appointment_verify: assemble('Lịch hẹn của bạn sẽ được đặt vào ngày ${appointment_date} lúc ${appointment_time}', 'appointment_date', 'appointment_time'),
     appointment_confirm_thanks: 'Cảm ơn bạn! Chúng tôi sẽ liên hệ để xác nhận lịch hẹn sớm nhất',
     appointment_button_confirm: 'Xác nhận',
