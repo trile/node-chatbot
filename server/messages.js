@@ -30,7 +30,9 @@ const Messages = {
     appointment_button_confirm: 'Confirm',
     appointment_button_rest: 'Reset',
     appointment_button_cancel: 'Cancel',
-    appointment_cancel: 'You have cancelled appointment booking process.'
+    appointment_cancel: 'You have cancelled appointment booking process.',
+
+    dayOfWeek: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
   },
 
   vi_VN : {
@@ -57,7 +59,9 @@ const Messages = {
     appointment_button_confirm: 'Xác nhận',
     appointment_button_rest: 'Đặt lại',
     appointment_button_cancel: 'Huỷ',
-    appointment_cancel: "Bạn đã chọn huỷ đặt lịch hẹn."
+    appointment_cancel: "Bạn đã chọn huỷ đặt lịch hẹn.",
+
+    dayOfWeek: ['CN ngày', 'T2 ngày', 'T3 ngày', 'T4 ngày', 'T5 ngày', 'T6 ngày', 'T7 ngày']
   }
 }
 

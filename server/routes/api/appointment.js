@@ -162,10 +162,10 @@ appointmentRouter.post('/getdate', [checkAPIKey, checkParam], (req, res, next) =
         return {
           "url": `https://${req.hostname}/api/appointment/setdate?token=${req.query.token}&fb_user_id=${customer.messenger_user_id}&appointment_email=${req.query.appointment_email}&date=${date.unix()}`,
           "type": "json_plugin_url",
-          "title": date.format('ddd D')
+          "title": `${Messages[customer.locale].dayOfWeek[date.day()]} ${date.format('D')}`
         }
       })
-      resObj = {
+      let resObj = {
         "messages": [
           {
             "text":  Messages[customer.locale].get_appointment_date,
@@ -240,7 +240,33 @@ appointmentRouter.post('/gettime', [checkAPIKey, checkParam], (req, res, next) =
           "title": time.format('hh:mm')
         }
       })
-      resObj = {
+
+      // let quickrepliesArray = [];
+      // let i = 0;
+      // let j = 0;
+      // if (timeOptions.length > 11) {
+      //   while (i < timeOptions.length) {
+      //     quickrepliesArray[j]=timeOptions.slice(i, i+10);
+      //     i = i + 10;
+      //     j = j + 1;
+      //   }
+      // }
+      //
+      // console.log(quickrepliesArray);
+      // console.log(timeOptions);
+      // let resObj = {
+      //   messages: []
+      // }
+      // i = 0;
+      // while (i < quickrepliesArray.length) {
+      //   resObj.messages.push({
+      //     "text":  Messages[customer.locale].get_appointment_time,
+      //     "quick_replies": quickrepliesArray[i]
+      //   });
+      //   i++;
+      // }
+
+      let resObj = {
         "messages": [
           {
             "text":  Messages[customer.locale].get_appointment_time,
@@ -248,6 +274,7 @@ appointmentRouter.post('/gettime', [checkAPIKey, checkParam], (req, res, next) =
           }
         ]
       }
+
       res.status(200).send(JSON.stringify(resObj));
 
     })
