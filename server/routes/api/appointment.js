@@ -30,6 +30,8 @@ appointmentRouter.post('/setup', [checkAPIKey, checkBody], (req, res, next) => {
 
   if (!req.body['duration']) return res.status(400).send('Bad request: No appointment duration');
 
+  if (!req.body['day off']) return res.status(400).send('Bad request: No day off setting');
+
 
   let appointmentP =  AppointmentSetting.findOne({
     client_email: req.body['client email']
@@ -51,7 +53,8 @@ appointmentRouter.post('/setup', [checkAPIKey, checkBody], (req, res, next) => {
           open_evening:req.body['open evening'],
           close_evening:req.body['close evening'],
           timezone:req.body['timezone'],
-          duration: req.body['duration']
+          duration: req.body['duration'],
+          day_off: req.body['day off'].replace(/\s/g,'').toLowerCase()
       });
       newAppointmentSetting.save()
         .then(() => {
@@ -85,7 +88,8 @@ appointmentRouter.post('/setup', [checkAPIKey, checkBody], (req, res, next) => {
           open_evening:req.body['open evening'],
           close_evening:req.body['close evening'],
           timezone:req.body['timezone'],
-          duration: req.body['duration']
+          duration: req.body['duration'],
+          day_off: req.body['day off'].replace(/\s/g,'').toLowerCase()
         }}
       )
       .then(() => {
@@ -129,7 +133,7 @@ appointmentRouter.post('/getdate', [checkAPIKey, checkBody], (req, res, next) =>
   //Need to find the appointment settings using email. Supposed to be the only one in client database.
   Promise.all([appointmentP, customerP])
     .then(([appointmentSetting, customer]) => {
-      let result = getAvailableDate(moment().format('DD/MM/YY'), appointmentSetting.timezone, 11);
+      let result = getAvailableDate(moment().format('DD/MM/YY'), appointmentSetting.timezone, 9, appointmentSetting.day_off);
       let dateOptions = result.map((dateString) => {
         const date = moment.unix(dateString);
         return {

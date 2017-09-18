@@ -7,30 +7,42 @@ let AppointmentSettingSchema = new mongoose.Schema({
   },
   timezone: {
     type: String,
+    trim: true
   },
   duration: {
     type: Number
   },
   open_morning: {
     type: String,
+    trim: true
   },
   close_morning: {
     type: String,
+    trim: true
   },
 
   open_afternoon: {
     type: String,
+    trim: true
   },
-  
+
   close_afternoon: {
     type: String,
+    trim: true
   },
 
   open_evening: {
     type: String,
+    trim: true
   },
   close_evening: {
     type: String,
+    trim: true
+  },
+
+  day_off: {
+    type: String,
+    trim: true
   }
 });
 

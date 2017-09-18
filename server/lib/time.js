@@ -2,21 +2,30 @@ let moment = require('moment');
 
 let now = moment().utcOffset(7);
 
-// console.log(now.weekday()); //get day of the weekday
-// console.log(now.format("DD/MM/YY")); //get day of the weekday
-
+const dayOfWeek = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 
 /* Function that return the available time slots for a specific to a date*/
+function getAvailableDate(dateString, timezone, noOfDate, dayOffString) {
+    //Get the list of off days
+    let offDays = [];
+    dayOffString.split(',').map((dayStr) => {
+      offDays.push(dayOfWeek.indexOf(dayStr))
+    })
 
-function getAvailableDate(dateString, timezone, noOfDate) {
+    //Create a day interator with the appropriate date and timezone
     let dateIter = moment(dateString, 'DD/MM/YYYY');
     dateIter = dateIter.utcOffset(parseInt(timezone));
     let count = 0;
     let result = [];
     while (count < noOfDate) {
+      //start from the next day
       dateIter.add(1, 'd');
-      if (dateIter.day() === 6 || dateIter.day() ===0)
+
+      //exclude off day
+      if (offDays.includes(dateIter.day()))
         continue;
+      // else if ()
+      //exclude holidays
       else {
         count++;
         result.push(dateIter.unix());
@@ -25,6 +34,7 @@ function getAvailableDate(dateString, timezone, noOfDate) {
     return result;
 }
 
+/* Function that return the avaible appoinment slot for a specific date and time */
 function getAvailableTime(dateString, startTimeStr, endTimeStr, intervalMinute, timezone) {
 
     let start = moment(dateString + ' ' + startTimeStr, 'DD/MM/YY hh:mm').utcOffset(timezone);
@@ -41,9 +51,9 @@ function getAvailableTime(dateString, startTimeStr, endTimeStr, intervalMinute, 
     return result;
 }
 
-// result = getAvailabeTime('03/09/2017', '9:00', '17:00', 60, '7', '12:00', "13:00");
-// result.map( (time)=> {
-//   console.log(moment.unix(time).format('MM-DD hh:mm'))
+// let res = getAvailableDate('18/09/2017', 7, 9, 'sat,sun,wed');
+// res.map((date) => {
+//   console.log(moment.unix(date).format('ddd DD/MM'))
 // })
 
 module.exports = {getAvailableDate, getAvailableTime};
