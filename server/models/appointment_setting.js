@@ -40,7 +40,12 @@ let AppointmentSettingSchema = new mongoose.Schema({
     trim: true
   },
 
-  day_off: {
+  days_off: {
+    type: String,
+    trim: true
+  },
+
+  holidays: {
     type: String,
     trim: true
   }

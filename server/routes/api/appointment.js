@@ -30,7 +30,9 @@ appointmentRouter.post('/setup', [checkAPIKey, checkBody], (req, res, next) => {
 
   if (!req.body['duration']) return res.status(400).send('Bad request: No appointment duration');
 
-  if (!req.body['day off']) return res.status(400).send('Bad request: No day off setting');
+  if (!req.body['days off']) return res.status(400).send('Bad request: No days off setting');
+
+  if (!req.body['holidays']) return res.status(400).send('Bad request: No holidays setting');
 
 
   let appointmentP =  AppointmentSetting.findOne({
@@ -54,7 +56,8 @@ appointmentRouter.post('/setup', [checkAPIKey, checkBody], (req, res, next) => {
           close_evening:req.body['close evening'],
           timezone:req.body['timezone'],
           duration: req.body['duration'],
-          day_off: req.body['day off'].replace(/\s/g,'').toLowerCase()
+          days_off: req.body['days off'].replace(/\s/g,'').toLowerCase(),
+          holidays: req.body['holidays'].replace(/\s/g,'')
       });
       newAppointmentSetting.save()
         .then(() => {
@@ -89,7 +92,8 @@ appointmentRouter.post('/setup', [checkAPIKey, checkBody], (req, res, next) => {
           close_evening:req.body['close evening'],
           timezone:req.body['timezone'],
           duration: req.body['duration'],
-          day_off: req.body['day off'].replace(/\s/g,'').toLowerCase()
+          days_off: req.body['days off'].replace(/\s/g,'').toLowerCase(),
+          holidays: req.body['holidays'].replace(/\s/g,'')
         }}
       )
       .then(() => {
@@ -133,7 +137,13 @@ appointmentRouter.post('/getdate', [checkAPIKey, checkBody], (req, res, next) =>
   //Need to find the appointment settings using email. Supposed to be the only one in client database.
   Promise.all([appointmentP, customerP])
     .then(([appointmentSetting, customer]) => {
-      let result = getAvailableDate(moment().format('DD/MM/YY'), appointmentSetting.timezone, 9, appointmentSetting.day_off);
+      let result = getAvailableDate(
+          moment().format('DD/MM/YY'),
+          appointmentSetting.timezone,
+          9,
+          appointmentSetting.days_off,
+          appointmentSetting.holidays
+        );
       let dateOptions = result.map((dateString) => {
         const date = moment.unix(dateString);
         return {
