@@ -281,7 +281,7 @@ appointmentRouter.post('/gettime', [checkAPIKey, checkParam], (req, res, next) =
       let timeOptions = result.map((dateString) => {
         const time = moment.unix(dateString);
         return {
-          "url": `https://${req.hostname}/api/appointment/settime?token=${req.query.token}&fb_user_id=${customer.messenger_user_id}&appointment_email=${req.query.appointment_email}&time=${time.unix()}`,
+          "url": `https://${req.hostname}/api/appointment/settime?token=${req.query.token}&fb_user_id=${customer.messenger_user_id}&appointment_email=${req.query.appointment_email}&time=${time.unix()}&timezone=${appointmentSetting.timezone}`,
           "type": "json_plugin_url",
           "title": time.format('HH:mm')
         }
@@ -313,8 +313,13 @@ appointmentRouter.post('/settime', [checkAPIKey, checkParam], (req, res, next) =
     return;
   }
 
+  if(!req.query.timezone) {
+    res.status(400).send('Bad request: No time zone');
+    return;
+  }
 
-  const time = moment.unix(req.query.time);
+
+  const time = moment.unix(req.query.time).utcOffset(req.query.timezone);
 
   Customer.findOneAndUpdate(
     {messenger_user_id: req.query.fb_user_id},
