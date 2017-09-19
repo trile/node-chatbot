@@ -319,7 +319,7 @@ appointmentRouter.post('/settime', [checkAPIKey, checkParam], (req, res, next) =
   }
 
 
-  const time = moment.unix(req.query.time).utcOffset(req.query.timezone);
+  const time = moment.unix(req.query.time);
 
   Customer.findOneAndUpdate(
     {messenger_user_id: req.query.fb_user_id},

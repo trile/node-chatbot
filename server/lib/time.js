@@ -38,8 +38,8 @@ function getAvailableDate(dateString, timezone, noOfDate, dayOffString, holidays
 /* Function that return the avaible appoinment slot for a specific date and time */
 function getAvailableTime(dateString, startTimeStr, endTimeStr, intervalMinute, timezone) {
 
-    let start = moment(dateString + ' ' + startTimeStr, 'DD/MM/YY hh:mm').utcOffset(timezone);
-    let end = moment(dateString + ' ' + endTimeStr, 'DD/MM/YY hh:mm').utcOffset(timezone);
+    let start = moment(dateString + ' ' + startTimeStr, 'DD/MM/YY hh:mm');
+    let end = moment(dateString + ' ' + endTimeStr, 'DD/MM/YY hh:mm');
 
     var result = [];
     var slot = start;
