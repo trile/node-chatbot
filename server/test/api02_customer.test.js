@@ -17,16 +17,22 @@ describe('POST /api/customer/setup', () => {
   let bodyNew = // new id not in the system
     {
       'messenger user id': '8888888888',
+      'first name': 'John',
+      'last name': 'Doe'
     };
 
   let bodyNoLocale = // id is in the system but no locale set
     {
       'messenger user id': '12345678987654321',
+      'first name': 'John',
+      'last name': 'Doe'
     };
 
   let bodyWithLocale = // id is in the sytem with locate set to en_US
     {
-      'messenger user id': '98765432123456789'
+      'messenger user id': '98765432123456789',
+      'first name': 'John',
+      'last name': 'Doe'
     };
 
   let response_dual_lang = "Chào bạn! Hi there!";

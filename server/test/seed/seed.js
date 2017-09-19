@@ -13,17 +13,23 @@ const customers = [
   {
     _id: customerId1,
     messenger_user_id: '12345678987654321',
+    first_name: 'Tri',
+    last_name: 'Le'
   },
   {
      _id: customerId2,
     messenger_user_id: '98765432123456789',
-    locale: 'en_US'
+    locale: 'en_US',
+    first_name: 'Nam',
+    last_name: 'Nguyen'
   },
   {
     _id: customerId3,
     messenger_user_id: '5555555555',
     locale: 'vi_VN',
-    phone_number: '123-456-7890'
+    phone_number: '123-456-7890',
+    first_name: 'Nho',
+    last_name: 'Le'
   }
 ];
 

@@ -7,6 +7,12 @@ let CustomerSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  first_name: {
+    type:String
+  },
+  last_name: {
+    type:String
+  },
   locale: {
     type: String
   },
