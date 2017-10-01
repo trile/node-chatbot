@@ -2,9 +2,7 @@
 
 ## Descriptions
 
-This is the source code for OVC chatbot API.
-Please [read the PRD](http://bit.ly/2voU8bQ)
-Respo: [bitbucket](https://bitbucket.org/solutions-union/next-bot)
+This is the source code for Next chatbot API.
 
 ## Requirement
 Correctly set up Mongo database server.
@@ -91,51 +89,7 @@ yarn test-watch
 ```
 
 ## Deployment on Heroku
-App Url: https://nextbot-sun.herokuapp.com/
 Need to set appropriate environment variables:
 `PORT`
 `MONGO_URI`
 `API_TOKEN`
-
-## How to clone a bot
-- Set up a new mongo db from mlab
-    - Create a new user and get the credentials
-
-- Set up a new Heroku app. Get your own Heroku token
-    - Create following environment varibales:
-        - `PORT`
-        - `MONGO_URI`
-        - `API_TOKEN`
-
-- Go to next-bot repo,
-    - Click + sign on the narrow left column
-    - Choose to fork the repo, enter required information
-
-- Go to your new clone repository
-    - Go to Pipelines, enable it, the first run will failed.
-    - Go to Settings > environment variables. Provide it with the followings:
-        - `SNYK_TOKEN`
-        - `HEROKU_APP_NAME`
-        - `HEROKU_API_KEY`
-    - Go and rerun pipelines, after the test passed it should deploy to Heroku
-
-- To update your cloned bot from newest Next-bot
-    - Clone the repo to your local
-    - Add Heroku remote ( for using heroku-cli)
-    `git remote add heroku https://git.heroku.com/<app-name>.git`
-    - Add upstream to point to next-bot
-    `git remote add upstream `https://<username>@bitbucket.org/solutions-union/next-bot.git`
-    - To update the child bot:
-    `git pull upstream master`
-    `git push`
-    - To see heroku server log:
-    `git logs -t`
-
-- IMPORTANT - EXPERIMENTAL: Update the cloned bot FROM Bitbucket control panel
-    - Go to cloned bot repo
-    - Go to Branches
-    - Add `compare` after the url
-    - Choose the appropriate source and destination, click compare
-    - There will be a link to merge your different
-        - MAKE SURE THE SOURCE OF THE MERGE IS NEXT-BOT
-        - THE MESSAGE SHOULD BE LIKE "Merged solutions-union/next-bot into master"
